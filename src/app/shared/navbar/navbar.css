@@ -1,0 +1,45 @@
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.page-header h1 {
+  font-size: 24px;
+  font-weight: 600;
+  margin: 0;
+  color: #111;
+}
+.top-icons {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+.icon-circle {
+  width: 40px;
+  height: 40px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 18px;
+  color: #555;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  transition: background-color 0.3s ease;
+}
+
+.icon-circle:hover {
+  background-color: #f0f0f0;
+}
+
+.profile-pic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ffffff;
+}

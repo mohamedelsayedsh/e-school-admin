@@ -1,0 +1,146 @@
+.login-container {
+  width: 100vw;
+  height: 100vh;
+  background-color: #f5f6fa;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.login-card {
+  background-color: #ffffff;
+  padding: 40px;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  border: 1px solid #eef0f4;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 35px;
+}
+
+.login-header .logo-box {
+  width: 45px;
+  height: 45px;
+  background-color: #050505;
+  border-radius: 10px;
+  margin: 0 auto 15px auto;
+}
+
+.login-header h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #050505;
+  margin: 0 0 8px 0;
+  letter-spacing: 1px;
+}
+
+.login-header p {
+  color: #a0a0a0;
+  font-size: 14px;
+  margin: 0;
+}
+
+.form-group {
+  margin-bottom: 22px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 8px;
+}
+
+.input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-wrapper i {
+  position: absolute;
+  left: 15px;
+  color: #a0a0a0;
+  font-size: 18px;
+}
+
+.input-wrapper input {
+  width: 100%;
+  padding: 14px 15px 14px 45px;
+  background-color: #f8f9fc;
+  border: 1px solid #eef0f4;
+  border-radius: 12px;
+  font-size: 14px;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+.input-wrapper input:focus {
+  border-color: #050505;
+  background-color: #ffffff;
+}
+
+.error-banner {
+  background-color: #fff5f5;
+  border: 1px solid #ffccd0;
+  color: #e53e3e;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.login-btn {
+  width: 100%;
+  padding: 14px;
+  background-color: #050505;
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.login-btn:hover {
+  background-color: #222222;
+}
+
+.login-btn:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+input.is-invalid {
+  border-color: #dc3545 !important;
+  background-color: #fff8f8 !important;
+}
+
+.validation-error {
+  color: #dc3545;
+  font-size: 13px;
+  margin-top: 6px;
+  display: flex;
+  flex-direction: column;
+}
+
+.validation-error small {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.validation-error small::before {
+  content: '⚠️';
+  font-size: 11px;
+}

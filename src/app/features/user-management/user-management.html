@@ -1,0 +1,80 @@
+<div class="page-container">
+
+  <app-navbar pageTitle="User Management"></app-navbar>
+
+  <div class="table-card">
+    <div class="table-header">
+      <h2>All Users List</h2>
+      <div class="table-actions">
+
+        <select class="role-filter">
+          <option value="">All Roles</option>
+          <option value="1">Student</option>
+          <option value="2">Teacher</option>
+        </select>
+
+        <div class="search-box">
+          <i class="bi bi-search"></i>
+          <input type="text" placeholder="Search by Name, Email or Phone." />
+        </div>
+
+        <button class="toggle-btn">
+          <i class="bi bi-toggle-on text-primary"></i> ⚠️ Pending Assignments
+        </button>
+
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="custom-table">
+        <thead>
+          <tr>
+            <th>No</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Class</th>
+            <th>Role</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if (isLoading) {
+            <tr><td colspan="8" class="text-center">Loading users data...</td></tr>
+          }
+          @else if (errorMessage) {
+            <tr><td colspan="8" class="text-center error-msg">{{ errorMessage }}</td></tr>
+          }
+          @else if (users.length === 0) {
+            <tr><td colspan="8" class="text-center">No users found.</td></tr>
+          }
+          @else {
+            @for (user of users; track user.id; let i = $index) {
+              <tr>
+                <td>{{ (i + 1) < 10 ? '0' + (i + 1) : (i + 1) }}</td>
+                <td>
+                  <div class="user-name-col">
+                    <img [src]="'https://ui-avatars.com/api/?name=' + user.userName" class="avatar" alt="User">
+                    {{ user.userName }}
+                  </div>
+                </td>
+                <td class="text-muted">{{ user.email || 'N/A' }}</td>
+                <td class="text-muted">{{ user.phoneNumber || 'N/A' }}</td>
+                <td class="text-muted">{{ user.className || 'N/A' }}</td>
+                <td class="text-muted">{{ user.role?.roleName || 'N/A' }}</td>
+                <td>
+                  <div class="action-icons">
+                    <i class="bi bi-pencil-square"></i>
+                    <i class="bi bi-trash"></i>
+                    <i class="bi bi-grid-3x3-gap"></i>
+                  </div>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>

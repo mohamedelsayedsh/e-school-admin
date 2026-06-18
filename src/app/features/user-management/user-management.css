@@ -1,0 +1,153 @@
+.page-container {
+  padding: 30px 40px;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.table-card {
+  background-color: #ffffff;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+  border: 1px solid #eef0f4;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.table-header h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.table-actions {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.role-filter, .search-box input {
+  background-color: #f8f9fc;
+  border: 1px solid #eef0f4;
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-size: 14px;
+  outline: none;
+}
+
+.search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-box i {
+  position: absolute;
+  left: 15px;
+  color: #a0a0a0;
+}
+
+.search-box input {
+  padding-left: 40px;
+  width: 250px;
+}
+
+.toggle-btn {
+  background-color: #eff4ff;
+  border: 1px solid #cce0ff;
+  color: #3b82f6;
+  padding: 10px 15px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.text-primary {
+  font-size: 20px;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.custom-table th {
+  background-color: #f1f8fc;
+  color: #333;
+  font-weight: 600;
+  font-size: 14px;
+  padding: 15px;
+  text-align: left;
+}
+
+.custom-table th:first-child {
+  border-top-left-radius: 12px;
+  border-bottom-left-radius: 12px;
+}
+
+.custom-table th:last-child {
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+}
+
+.custom-table td {
+  padding: 15px;
+  font-size: 14px;
+  border-bottom: 1px solid #f0f0f0;
+  vertical-align: middle;
+}
+
+.user-name-col {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 500;
+  color: #222;
+}
+
+.avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+}
+
+.text-muted {
+  color: #777;
+}
+
+.action-icons {
+  display: flex;
+  gap: 15px;
+  font-size: 18px;
+  color: #a0a0a0;
+}
+
+.action-icons i {
+  cursor: pointer;
+  transition: color 0.2s;
+}
+
+.action-icons i:hover {
+  color: #000;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.error-msg {
+  color: #dc3545;
+  font-weight: 600;
+}
