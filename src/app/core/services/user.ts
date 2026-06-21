@@ -1,15 +1,16 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { ApiResponse } from '../models/api-response';
 import { Observable } from 'rxjs';
 import { User } from '../models/user';
+import { environment } from '../../../environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class UserService {
   private http = inject(HttpClient);
-  private apiUrl = 'http://pixel-vision.runasp.net/api/admin/users';
+  private apiUrl = `${environment.apiUrl}/admin/users`;
 
   getAllUsers(): Observable<ApiResponse<User[]>> {
     return this.http.get<ApiResponse<User[]>>(this.apiUrl);
@@ -20,6 +21,7 @@ export class UserService {
   }
 
   deleteUser(userId: number): Observable<ApiResponse<void>> {
-    return this.http.delete<ApiResponse<void>>(`${this.apiUrl}/${userId}`);
+    const params = new HttpParams().set('id', userId);
+    return this.http.delete<ApiResponse<void>>(this.apiUrl, { params });
   }
 }

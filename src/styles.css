@@ -1,1 +1,311 @@
-/* You can add global styles to this file, and also import other style files */
+/* ============================
+   DESIGN SYSTEM - GLOBAL STYLES
+   ============================ */
+
+:root {
+  /* Brand */
+  --primary: #2563eb;
+  --primary-dark: #1d4ed8;
+  --primary-darker: #1e3a6e;
+  --primary-light: #eaf1ff;
+
+  --sidebar-from: #1e3a6e;
+  --sidebar-to: #14213d;
+
+  /* Status */
+  --danger: #dc3545;
+  --danger-light: #fdeaea;
+  --success: #198754;
+  --success-light: #d1e7dd;
+
+  /* Neutrals */
+  --text-dark: #1f2937;
+  --text-muted: #6b7280;
+  --border: #e8ebf0;
+  --bg-page: #f4f6fb;
+  --card-bg: #ffffff;
+
+  /* Misc */
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 4px 14px rgba(20, 33, 61, 0.06);
+  --shadow-lg: 0 10px 30px rgba(20, 33, 61, 0.18);
+  --font: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+* { font-family: var(--font); }
+
+body {
+  background: var(--bg-page);
+  margin: 0;
+  color: var(--text-dark);
+}
+
+/* ---------- Page / Table shells (quiz-list, user-management, etc.) ---------- */
+
+.page-container {
+  padding: 30px 40px;
+}
+
+.table-card {
+  background: var(--card-bg);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border: 1px solid var(--border);
+  padding: 20px;
+}
+
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.table-header h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--text-dark);
+  margin: 0;
+}
+
+.table-actions {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.table-responsive {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.custom-table th {
+  background-color: var(--primary-light);
+  color: var(--primary-darker);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  padding: 14px 15px;
+  text-align: left;
+}
+
+.custom-table th:first-child { border-top-left-radius: var(--radius-sm); border-bottom-left-radius: var(--radius-sm); }
+.custom-table th:last-child  { border-top-right-radius: var(--radius-sm); border-bottom-right-radius: var(--radius-sm); }
+
+.custom-table td {
+  padding: 14px 15px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+.custom-table tbody tr:hover { background: #fafbff; }
+
+.fw-bold { font-weight: 600; color: var(--text-dark); }
+.text-muted { color: var(--text-muted); font-size: 0.9rem; }
+.text-center { text-align: center; padding: 30px !important; color: var(--text-muted); }
+.error-msg { color: var(--danger); font-weight: 600; }
+
+/* Primary action button (Create New Quiz, etc.) */
+.btn-primary-solid {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 10px 18px;
+  border-radius: var(--radius-sm);
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.2s;
+}
+.btn-primary-solid:hover { background-color: var(--primary-dark); }
+
+/* Search / filter inputs used on list pages */
+.role-filter, .search-box input {
+  background-color: var(--bg-page);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 10px 15px;
+  font-size: 14px;
+  outline: none;
+}
+.role-filter:focus, .search-box input:focus { border-color: var(--primary); }
+
+.search-box { position: relative; display: flex; align-items: center; }
+.search-box i { position: absolute; left: 15px; color: var(--text-muted); }
+.search-box input { padding-left: 40px; width: 250px; }
+
+/* Row action icons (eye/edit/delete) — shared everywhere */
+.action-icons {
+  display: flex;
+  gap: 10px;
+}
+
+.action-icons i {
+  width: 34px;
+  height: 34px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  background: var(--primary-light);
+  color: var(--primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.action-icons i:hover { background: var(--primary); color: white; }
+
+.action-icons i.danger { background: var(--danger-light); color: var(--danger); }
+.action-icons i.danger:hover { background: var(--danger); color: white; }
+
+.action-icons i.neutral { background: #f1f2f5; color: var(--text-muted); }
+.action-icons i.neutral:hover { background: #d8dbe2; color: var(--text-dark); }
+
+.user-name-col {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-weight: 500;
+  color: var(--text-dark);
+}
+
+.avatar {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  border: 2px solid var(--primary-light);
+}
+
+/* ---------- Modals (create-quiz, quiz-builder, any future modal) ---------- */
+
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100vw; height: 100vh;
+  background: rgba(15, 23, 42, 0.55);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-card {
+  background: var(--card-bg);
+  width: 100%;
+  max-width: 500px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  animation: slideDown 0.25s ease-out;
+}
+
+.modal-card.modal-lg { max-width: 700px; }
+
+@keyframes slideDown {
+  from { transform: translateY(-20px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--primary-light);
+}
+
+.modal-header h3 { margin: 0; font-size: 1.15rem; color: var(--primary-darker); font-weight: 600; }
+
+.btn-close-icon {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  cursor: pointer;
+  color: var(--text-muted);
+}
+.btn-close-icon:hover { color: var(--danger); }
+
+.modal-body { padding: 20px; }
+
+.modal-footer {
+  padding: 15px 20px;
+  background: var(--bg-page);
+  border-top: 1px solid var(--border);
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+/* Forms */
+.form-group label { display: block; margin-bottom: 8px; font-weight: 500; color: #444; }
+
+.form-control {
+  width: 100%;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  box-sizing: border-box;
+  outline: none;
+  font-size: 14px;
+}
+.form-control:focus { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-light); }
+
+.mt-3 { margin-top: 15px; }
+.mt-4 { margin-top: 24px; }
+.row { display: flex; gap: 20px; }
+.col { flex: 1; }
+
+.error-text { color: var(--danger); font-size: 0.85rem; display: block; margin-top: 5px; }
+
+/* Alerts */
+.alert { padding: 12px; border-radius: var(--radius-sm); font-weight: 500; margin-bottom: 15px; }
+.alert-error, .alert-danger { background: var(--danger-light); color: #842029; }
+.alert-success { background: var(--success-light); color: #0f5132; }
+
+/* Buttons inside modals */
+.btn-cancel {
+  background: white;
+  border: 1px solid #ccc;
+  padding: 9px 18px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 500;
+}
+.btn-cancel:hover { background: #f5f5f5; }
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  border: none;
+  padding: 9px 18px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 500;
+}
+.btn-primary:hover { background: var(--primary-dark); }
+.btn-primary:disabled { background: #a5c7fc; cursor: not-allowed; }
+/* delete button*/
+.btn-danger {
+  background: var(--danger);
+  color: white;
+  border: none;
+  padding: 9px 18px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-weight: 500;
+}
+.btn-danger:hover { background: #b02a37; }
+.btn-danger:disabled { background: #e8a8ad; cursor: not-allowed; }

@@ -3,20 +3,21 @@
   justify-content: space-between;
   align-items: center;
   margin-bottom: 30px;
-  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
 
 .page-header h1 {
   font-size: 24px;
   font-weight: 600;
   margin: 0;
-  color: #111;
+  color: var(--text-dark);
 }
+
 .top-icons {
   display: flex;
   align-items: center;
   gap: 15px;
 }
+
 .icon-circle {
   width: 40px;
   height: 40px;
@@ -26,20 +27,18 @@
   justify-content: center;
   align-items: center;
   font-size: 18px;
-  color: #555;
+  color: var(--primary);
   cursor: pointer;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+  box-shadow: var(--shadow);
   transition: background-color 0.3s ease;
 }
 
-.icon-circle:hover {
-  background-color: #f0f0f0;
-}
+.icon-circle:hover { background-color: var(--primary-light); }
 
 .profile-pic {
   width: 40px;
   height: 40px;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid #ffffff;
+  border: 2px solid var(--primary-light);
 }
