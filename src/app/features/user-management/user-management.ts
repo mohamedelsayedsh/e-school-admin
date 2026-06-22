@@ -1,8 +1,9 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
 import { User } from '../../core/models/user';
 import { UserService } from '../../core/services/user';
 import { Navbar } from '../../shared/navbar/navbar';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-user-management',
@@ -13,6 +14,8 @@ import { CommonModule } from '@angular/common';
 export class UserManagement implements OnInit {
   private userService = inject(UserService);
   private cdr = inject(ChangeDetectorRef);
+  private destroyRef = inject(DestroyRef);
+  private router = inject(Router);
 
   users: User[] = [];
   filteredUsers: User[] = [];
@@ -93,6 +96,10 @@ export class UserManagement implements OnInit {
     return this.rolesMap[roleId] || 'Unknown Role';
   }
 
+  viewUserProfile(userId: number) {
+    this.router.navigate(['/users',userId]);
+  }
+
   // ---- Delete flow ----
 
   openDeleteConfirm(user: User) {
@@ -111,9 +118,8 @@ export class UserManagement implements OnInit {
     this.isDeleting = true;
     this.deleteError = '';
 
-    this.userService.deleteUser(this.userToDelete.id).subscribe({
+    const sub = this.userService.deleteUser(this.userToDelete.id).subscribe({
       next: (response) => {
-        console.log('Delete response:', response);
         if (response.isSuccess) {
           this.users = this.users.filter(u => u.id !== this.userToDelete!.id);
           this.applyFilters();
@@ -130,5 +136,6 @@ export class UserManagement implements OnInit {
         this.cdr.detectChanges();
       }
     });
+    this.destroyRef.onDestroy(() => sub.unsubscribe());
   }
 }

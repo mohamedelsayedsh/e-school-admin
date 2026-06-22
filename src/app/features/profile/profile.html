@@ -1,0 +1,35 @@
+<div class="page-container">
+
+  <app-navbar [pageTitle]="profileTitle"></app-navbar>
+
+  @if (isLoading) {
+    <p class="text-center text-muted">Loading profile...</p>
+  }
+  @else if (errorMessage) {
+    <div class="alert-error">{{ errorMessage }}</div>
+  }
+  @else {
+
+    <div class="profile-grid">
+
+      <div class="profile-column">
+        <h3 class="column-title">Identity</h3>
+        <app-profile-overview
+          [user]="viewedUser"
+          [relatedUser]="relatedUser"
+          [relationLabel]="relationLabel">
+        </app-profile-overview>
+      </div>
+
+      @if (!isParent && !isAdmin) {
+        <div class="profile-column">
+          <h3 class="column-title">Activity</h3>
+          <app-profile-activity></app-profile-activity>
+        </div>
+      }
+
+    </div>
+
+  }
+
+</div>

@@ -22,7 +22,6 @@ export class Sidebar {
     { label: 'Quizzes', route: '/quizzes', icon: 'bi bi-clipboard-check' },
     { label: 'Incidents', route: '/incidents', icon: 'bi bi-shield-exclamation' },
     { label: 'Reports', route: '/reports', icon: 'bi bi-file-earmark-bar-graph' },
-    { label: 'Settings', route: '/settings', icon: 'bi bi-gear' }
   ];
 
   onLogout(){

@@ -43,6 +43,7 @@ export class AuthService {
   }
   logout() {
     localStorage.removeItem('authToken');
+    localStorage.removeItem('user-name');
     // localStorage.removeItem('userRole');
   }
 }

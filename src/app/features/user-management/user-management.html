@@ -65,7 +65,7 @@
                 <td class="text-muted">{{ user.role?.roleName || 'N/A' }}</td>
                 <td>
                   <div class="action-icons">
-                    <i class="bi bi-eye" title="View"></i>
+                    <i class="bi bi-eye" title="View" (click)="viewUserProfile(user.id)"></i>
                     <i class="bi bi-trash danger" title="Delete" (click)="openDeleteConfirm(user)"></i>
                   </div>
                 </td>

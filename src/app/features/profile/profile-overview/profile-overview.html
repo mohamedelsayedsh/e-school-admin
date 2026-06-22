@@ -1,0 +1,52 @@
+<div class="table-card profile-card">
+  <div class="card-label">{{ user()?.role?.roleName }} Card</div>
+
+  <div class="profile-header">
+    <img
+      [src]="'https://ui-avatars.com/api/?name=' + user()!.userName + '&background=2563eb&color=fff&size=128'"
+      class="profile-avatar-img"
+      alt="Profile picture">
+    <div class="profile-identity">
+      <h2>{{ user()!.userName }}</h2>
+      <span class="role-badge">{{ user()!.role?.roleName || 'Unknown Role' }}</span>
+    </div>
+  </div>
+
+  <div class="contact-list">
+    <div class="contact-row">
+      <i class="bi bi-envelope"></i>
+      <span>{{ user()!.email || 'N/A' }}</span>
+    </div>
+    <div class="contact-row">
+      <i class="bi bi-telephone"></i>
+      <span>{{ user()!.phoneNumber || 'N/A' }}</span>
+    </div>
+    @if (user()!.className) {
+      <div class="contact-row">
+        <i class="bi bi-mortarboard"></i>
+        <span>{{ user()!.className }}</span>
+      </div>
+    }
+  </div>
+</div>
+
+@if (relationLabel()) {
+  <div class="table-card profile-card mt-4">
+    <div class="card-label">{{ relationLabel() }}</div>
+
+    @if (relatedUser()) {
+      <div class="profile-header compact">
+        <img
+          [src]="'https://ui-avatars.com/api/?name=' + relatedUser()!.userName + '&background=random&size=96'"
+          class="profile-avatar-img small"
+          alt="Related user picture">
+        <div class="profile-identity">
+          <h4>{{ relatedUser()!.userName }}</h4>
+          <span class="text-muted">{{ relatedUser()!.email }}</span>
+        </div>
+      </div>
+    } @else {
+      <p class="text-muted">No linked record found yet.</p>
+    }
+  </div>
+}

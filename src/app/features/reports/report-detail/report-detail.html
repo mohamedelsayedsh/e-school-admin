@@ -1,0 +1,176 @@
+<div class="page-container">
+
+  <app-navbar pageTitle="Report Deep Dive"></app-navbar>
+
+  @if (isLoading) {
+    <div class="loading-state">
+      <div class="spinner"></div>
+      <p>Loading report details...</p>
+    </div>
+  } @else if (!report) {
+    <div class="alert alert-error">Report not found or failed to load.</div>
+  } @else {
+
+    <button class="btn-back" (click)="goBack()">
+      <i class="bi bi-arrow-left"></i> Back to Reports
+    </button>
+
+    <!-- Metric cards row -->
+    <div class="metrics-row">
+      <div class="metric-card">
+        <span class="metric-label">Total Images Analyzed</span>
+        <span class="metric-value">{{ report.totalImages | number }}</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-label">AI Confidence Score</span>
+        <span class="metric-value text-success">{{ (report.avgConfidence * 100).toFixed(1) }}%</span>
+      </div>
+      <div class="metric-card">
+        <span class="metric-label">Current Risk Level</span>
+        <span class="metric-value">
+          <span class="risk-pill" [ngClass]="{
+            'risk-high':   report.riskLevel === 'High',
+            'risk-medium': report.riskLevel === 'Medium',
+            'risk-low':    report.riskLevel === 'Low'
+          }">
+            {{ report.riskLevel | uppercase }}
+            @if (report.riskLevel === 'High') { <i class="bi bi-exclamation-circle-fill"></i> }
+          </span>
+        </span>
+      </div>
+    </div>
+
+    <!-- Behavior analysis -->
+    <div class="behaviors-row">
+
+      <!-- Active behaviors -->
+      <div class="table-card behavior-card">
+        <h5 class="behavior-card-title">
+          <span class="icon-box icon-success"><i class="bi bi-graph-up-arrow"></i></span>
+          Active Behaviors
+        </h5>
+
+        <div class="behavior-list">
+          <div class="behavior-item">
+            <div class="behavior-meta">
+              <span class="behavior-name">Hand Raised</span>
+              <span class="behavior-count">{{ report.handRaisedCount }}</span>
+            </div>
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill fill-primary" [style.width.%]="getPercent(report.handRaisedCount)"></div>
+            </div>
+          </div>
+          <div class="behavior-item">
+            <div class="behavior-meta">
+              <span class="behavior-name">Writing</span>
+              <span class="behavior-count">{{ report.writtingCount }}</span>
+            </div>
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill fill-primary" [style.width.%]="getPercent(report.writtingCount)"></div>
+            </div>
+          </div>
+          <div class="behavior-item">
+            <div class="behavior-meta">
+              <span class="behavior-name">Reading</span>
+              <span class="behavior-count">{{ report.readingCount }}</span>
+            </div>
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill fill-primary" [style.width.%]="getPercent(report.readingCount)"></div>
+            </div>
+          </div>
+          <div class="behavior-item">
+            <div class="behavior-meta">
+              <span class="behavior-name">Looking Forward</span>
+              <span class="behavior-count">{{ report.lookingForwardCount }}</span>
+            </div>
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill fill-primary" [style.width.%]="getPercent(report.lookingForwardCount)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Distracted behaviors -->
+      <div class="table-card behavior-card">
+        <h5 class="behavior-card-title">
+          <span class="icon-box icon-danger"><i class="bi bi-exclamation-triangle-fill"></i></span>
+          Distracted Behaviors
+        </h5>
+
+        <div class="behavior-list">
+          <div class="behavior-item">
+            <div class="behavior-meta">
+              <span class="behavior-name">Sleeping</span>
+              <span class="behavior-count danger-count">{{ report.sleepingCount }}</span>
+            </div>
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill fill-danger" [style.width.%]="getPercent(report.sleepingCount)"></div>
+            </div>
+          </div>
+          <div class="behavior-item">
+            <div class="behavior-meta">
+              <span class="behavior-name">Looking Back</span>
+              <span class="behavior-count danger-count">{{ report.lookingBackCount }}</span>
+            </div>
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill fill-danger" [style.width.%]="getPercent(report.lookingBackCount)"></div>
+            </div>
+          </div>
+          <div class="behavior-item">
+            <div class="behavior-meta">
+              <span class="behavior-name">Standing</span>
+              <span class="behavior-count danger-count">{{ report.standingCount }}</span>
+            </div>
+            <div class="progress-bar-track">
+              <div class="progress-bar-fill fill-danger" [style.width.%]="getPercent(report.standingCount)"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Review status card -->
+    <div class="table-card review-card">
+      <h5 class="section-title">Current Review Status</h5>
+
+      <div class="review-meta-row">
+        <div class="review-meta-item">
+          <p class="review-meta-label">Assigned Risk</p>
+          <p class="review-meta-value">{{ report.riskLevel }}</p>
+        </div>
+        <div class="review-meta-item">
+          <p class="review-meta-label">Report Status</p>
+          <p class="review-meta-value">{{ report.status }}</p>
+        </div>
+        <div class="review-meta-item">
+          <p class="review-meta-label">Week</p>
+          <p class="review-meta-value">Week {{ report.weekNumber }}</p>
+        </div>
+      </div>
+
+      <div class="recommendation-block">
+        <p class="review-meta-label">AI Recommendation</p>
+        <div class="recommendation-text">
+          <p>{{ report.recomendation }}</p>
+        </div>
+      </div>
+
+      <div class="review-actions">
+        <button class="btn-cancel" (click)="goBack()">OK</button>
+        <button class="btn-primary" (click)="isEditModalOpen = true">
+          <i class="bi bi-pencil-square"></i> Edit Actions
+        </button>
+      </div>
+
+      @if (isEditModalOpen) {
+        <app-action-edit
+          [report]="report"
+          (closeModal)="isEditModalOpen = false"
+          (reportUpdated)="fetchReportDetails()">
+        </app-action-edit>
+      }
+    </div>
+
+  }
+</div>

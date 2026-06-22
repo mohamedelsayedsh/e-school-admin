@@ -1,0 +1,17 @@
+/* Risk badges */
+.risk-badge,
+.status-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.risk-high    { background: #fee2e2; color: #dc2626; }
+.risk-medium  { background: #fef3c7; color: #d97706; }
+.risk-low     { background: #d1fae5; color: #059669; }
+
+.status-approved { background: var(--primary-light); color: var(--primary-darker); }
+.status-pending  { background: #f3f4f6; color: #4b5563; }

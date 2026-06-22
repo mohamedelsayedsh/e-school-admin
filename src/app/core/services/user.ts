@@ -16,6 +16,10 @@ export class UserService {
     return this.http.get<ApiResponse<User[]>>(this.apiUrl);
   }
 
+  getUserById(id: number): Observable<ApiResponse<User>> {
+    return this.http.get<ApiResponse<User>>(`${this.apiUrl}/${id}`);
+  }
+
   updateUser(user: User): Observable<ApiResponse<void>> {
     return this.http.put<ApiResponse<void>>(this.apiUrl, user);
   }
