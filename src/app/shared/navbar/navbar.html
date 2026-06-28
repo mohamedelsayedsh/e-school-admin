@@ -2,7 +2,25 @@
   <h1>{{ pageTitle() }}</h1>
 
   <div class="top-icons">
-    <div class="icon-circle"><i class="bi bi-bell"></i></div>
-    <img src="https://ui-avatars.com/api/?name={{ userName }}&background=random" class="profile-pic" alt="{{ userName }}">
+
+    <div class="icon-circle" title="Notifications">
+      <i class="bi bi-bell"></i>
+    </div>
+
+    <img
+      src="https://ui-avatars.com/api/?name={{ userName }}&background=random"
+      class="profile-pic"
+      alt="{{ userName }}"
+      title="{{ userName }}"
+    />
+
+    <div
+      class="icon-circle logout-btn"
+      title="Logout"
+      (click)="onLogout()"
+    >
+      <i class="bi bi-box-arrow-right"></i>
+    </div>
+
   </div>
 </div>

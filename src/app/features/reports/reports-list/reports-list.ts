@@ -6,10 +6,12 @@ import { CommonModule, NgClass } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ReportInterface } from '../../../core/models/report';
 import { UserService } from '../../../core/services/user';
+import { Spinner } from "../../../shared/spinner/spinner";
+import { TableCard } from "../../../shared/table-card/table-card";
 
 @Component({
   selector: 'app-reports-list',
-  imports: [Navbar, CommonModule, NgClass, FormsModule],
+  imports: [Navbar, CommonModule, NgClass, FormsModule, Spinner, TableCard],
   templateUrl: './reports-list.html',
   styleUrl: './reports-list.css',
 })
@@ -44,6 +46,7 @@ export class ReportsList implements OnInit {
     const sub = this.reportService.getAllReports().subscribe({
       next: (response) => {
         if (response.isSuccess && response.result) {
+          console.log(response);
           this.reports = response.result;
           this.filteredReports = this.reports;
           this.loadStudentNames();
@@ -63,7 +66,6 @@ export class ReportsList implements OnInit {
   }
 
   private loadStudentNames() {
-    // Collect unique student IDs and fetch their names
     const uniqueIds = [...new Set(this.reports.map(r => r.studentId))];
     let pending = uniqueIds.length;
     if (pending === 0) return;

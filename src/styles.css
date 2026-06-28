@@ -1,7 +1,6 @@
 /* ============================
    DESIGN SYSTEM - GLOBAL STYLES
    ============================ */
-
 :root {
   /* Brand */
   --primary: #2563eb;
@@ -32,21 +31,16 @@
   --shadow-lg: 0 10px 30px rgba(20, 33, 61, 0.18);
   --font: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
 }
-
 * { font-family: var(--font); }
-
 body {
   background: var(--bg-page);
   margin: 0;
   color: var(--text-dark);
 }
-
 /* ---------- Page / Table shells (quiz-list, user-management, etc.) ---------- */
-
 .page-container {
   padding: 30px 40px;
 }
-
 .table-card {
   background: var(--card-bg);
   border-radius: var(--radius);
@@ -54,67 +48,57 @@ body {
   border: 1px solid var(--border);
   padding: 20px;
 }
-
-.table-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 20px;
-  gap: 15px;
-  flex-wrap: wrap;
+.table-header{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:24px;
+    margin-bottom:26px;
+    flex-wrap:wrap;
 }
-
-.table-header h2 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--text-dark);
-  margin: 0;
+.table-header h2{
+    margin:0;
+    font-size:22px;
+    font-weight:700;
+    color:var(--text-dark);
 }
-
-.table-actions {
-  display: flex;
-  gap: 15px;
-  align-items: center;
-}
-
 .table-responsive {
   width: 100%;
   overflow-x: auto;
 }
-
 .custom-table {
   width: 100%;
   border-collapse: collapse;
 }
-
 .custom-table th {
   background-color: var(--primary-light);
   color: var(--primary-darker);
-  font-weight: 600;
-  font-size: 13px;
+  font-weight: 700;
+  font-size: 12px;
   letter-spacing: 0.3px;
   text-transform: uppercase;
   padding: 14px 15px;
   text-align: left;
 }
-
 .custom-table th:first-child { border-top-left-radius: var(--radius-sm); border-bottom-left-radius: var(--radius-sm); }
 .custom-table th:last-child  { border-top-right-radius: var(--radius-sm); border-bottom-right-radius: var(--radius-sm); }
-
 .custom-table td {
-  padding: 14px 15px;
+  padding:18px 15px;
   font-size: 14px;
   border-bottom: 1px solid var(--border);
   vertical-align: middle;
 }
-
-.custom-table tbody tr:hover { background: #fafbff; }
-
+.custom-table tbody tr{
+  transition:.25s;
+}
+.custom-table tbody tr:hover{
+  background:#f8fbff;
+}
+/* .custom-table tbody tr:hover { background: #fafbff; } */
 .fw-bold { font-weight: 600; color: var(--text-dark); }
 .text-muted { color: var(--text-muted); font-size: 0.9rem; }
 .text-center { text-align: center; padding: 30px !important; color: var(--text-muted); }
 .error-msg { color: var(--danger); font-weight: 600; }
-
 /* Primary action button (Create New Quiz, etc.) */
 .btn-primary-solid {
   background-color: var(--primary);
@@ -130,28 +114,83 @@ body {
   transition: background 0.2s;
 }
 .btn-primary-solid:hover { background-color: var(--primary-dark); }
-
 /* Search / filter inputs used on list pages */
-.role-filter, .search-box input {
-  background-color: var(--bg-page);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  padding: 10px 15px;
-  font-size: 14px;
-  outline: none;
+.table-actions{
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:14px;
+  flex-wrap:wrap;
 }
-.role-filter:focus, .search-box input:focus { border-color: var(--primary); }
-
-.search-box { position: relative; display: flex; align-items: center; }
-.search-box i { position: absolute; left: 15px; color: var(--text-muted); }
-.search-box input { padding-left: 40px; width: 250px; }
-
+.search-box{
+  position:relative;
+  display:flex;
+  align-items:center;
+}
+.search-box i{
+  position:absolute;
+  top:50%;
+  left:18px;
+  transform:translateY(-50%);
+  color:#94a3b8;
+  font-size:16px;
+  transition:.25s;
+}
+.search-box input{
+  width:100%;
+  height:48px;
+  padding:0 18px 0 48px;
+  border:1px solid #dbe3ef;
+  border-radius:14px;
+  background:white;
+  font-size:14px;
+  color:var(--text-dark);
+  transition:.25s;
+}
+.search-box input::placeholder{
+  color:#94a3b8;
+  font-weight:500;
+}
+.search-box input:focus{
+  outline:none;
+  border-color:var(--primary);
+  box-shadow:
+  0 0 0 4px rgba(37,99,235,.12);
+}
+.search-box:focus-within i{
+  color:var(--primary);
+}
+.role-filter{
+    width:180px;
+    height:48px;
+    padding:0 18px;
+    border-radius:14px;
+    border:1px solid #dbe3ef;
+    background:white;
+    font-size:14px;
+    font-weight:500;
+    color:var(--text-dark);
+    cursor:pointer;
+    transition:.25s;
+    appearance:none;
+    -webkit-appearance:none;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' fill='%2364748b' viewBox='0 0 16 16'%3E%3Cpath d='M1.5 5l6.5 6 6.5-6'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;
+    background-position:right 18px center;
+}
+.role-filter:hover{
+  border-color:var(--primary);
+}
+.role-filter:focus{
+  outline:none;
+  border-color:var(--primary);
+  box-shadow:0 0 0 4px rgba(37,99,235,.12);
+}
 /* Row action icons (eye/edit/delete) — shared everywhere */
 .action-icons {
   display: flex;
   gap: 10px;
 }
-
 .action-icons i {
   width: 34px;
   height: 34px;
@@ -165,15 +204,11 @@ body {
   cursor: pointer;
   transition: all 0.2s;
 }
-
 .action-icons i:hover { background: var(--primary); color: white; }
-
 .action-icons i.danger { background: var(--danger-light); color: var(--danger); }
 .action-icons i.danger:hover { background: var(--danger); color: white; }
-
 .action-icons i.neutral { background: #f1f2f5; color: var(--text-muted); }
 .action-icons i.neutral:hover { background: #d8dbe2; color: var(--text-dark); }
-
 .user-name-col {
   display: flex;
   align-items: center;
@@ -181,16 +216,19 @@ body {
   font-weight: 500;
   color: var(--text-dark);
 }
-
-.avatar {
-  width: 35px;
-  height: 35px;
-  border-radius: 50%;
-  border: 2px solid var(--primary-light);
+.avatar{
+  width:42px;
+  height:42px;
+  border-radius:50%;
+  border:2px solid var(--primary-light);
+  object-fit:cover;
+  box-shadow:0 4px 10px rgba(37,99,235,.15);
+  transition:.25s;
 }
-
+.avatar:hover{
+  transform:scale(1.08);
+}
 /* ---------- Modals (create-quiz, quiz-builder, any future modal) ---------- */
-
 .modal-overlay {
   position: fixed;
   top: 0; left: 0; width: 100vw; height: 100vh;
@@ -200,7 +238,6 @@ body {
   align-items: center;
   z-index: 1000;
 }
-
 .modal-card {
   background: var(--card-bg);
   width: 100%;
@@ -210,14 +247,11 @@ body {
   overflow: hidden;
   animation: slideDown 0.25s ease-out;
 }
-
 .modal-card.modal-lg { max-width: 700px; }
-
 @keyframes slideDown {
   from { transform: translateY(-20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
 }
-
 .modal-header {
   display: flex;
   justify-content: space-between;
@@ -226,9 +260,7 @@ body {
   border-bottom: 1px solid var(--border);
   background: var(--primary-light);
 }
-
 .modal-header h3 { margin: 0; font-size: 1.15rem; color: var(--primary-darker); font-weight: 600; }
-
 .btn-close-icon {
   background: none;
   border: none;
@@ -237,9 +269,7 @@ body {
   color: var(--text-muted);
 }
 .btn-close-icon:hover { color: var(--danger); }
-
 .modal-body { padding: 20px; }
-
 .modal-footer {
   padding: 15px 20px;
   background: var(--bg-page);
@@ -309,3 +339,110 @@ body {
 }
 .btn-danger:hover { background: #b02a37; }
 .btn-danger:disabled { background: #e8a8ad; cursor: not-allowed; }
+
+
+.actions-col {
+    width: 140px;
+}
+
+
+/* Status & Risk Badges */
+
+.risk-badge,
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  min-width: 90px;
+
+  padding: 6px 14px;
+
+  border-radius: 999px;
+
+  font-size: 12px;
+
+  font-weight: 600;
+
+  letter-spacing: .4px;
+}
+
+/* Risk */
+
+.risk-high {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.risk-medium {
+  background: #fef3c7;
+  color: #d97706;
+}
+
+.risk-low {
+  background: #d1fae5;
+  color: #059669;
+}
+
+/* Status */
+
+.status-approved {
+  background: var(--primary-light);
+  color: var(--primary-darker);
+}
+
+.status-pending {
+  background: #f3f4f6;
+  color: #4b5563;
+}
+
+.user-name-col{
+
+  display:flex;
+  align-items:center;
+  gap:14px;
+
+}
+
+.user-info{
+
+  display:flex;
+  flex-direction:column;
+
+}
+
+.fw-bold{
+
+  font-size:15px;
+
+  font-weight:600;
+
+  color:var(--text-dark);
+
+}
+
+.role-badge{
+
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+
+  min-width:95px;
+
+  height:32px;
+
+  padding:0 14px;
+
+  border-radius:999px;
+
+  background:#edf4ff;
+
+  color:#2563eb;
+
+  font-size:12px;
+
+  font-weight:600;
+
+  text-transform:capitalize;
+
+}

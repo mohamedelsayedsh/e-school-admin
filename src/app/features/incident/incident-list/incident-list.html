@@ -1,0 +1,76 @@
+<div class="page-container">
+  <app-navbar pageTitle="Incidents Management"></app-navbar>
+
+  <div class="mt-4">
+    <app-table-card title="Incidents Registry">
+
+      <div table-actions class="search-box">
+        <i class="bi bi-search"></i>
+        <input type="text" placeholder="Search by student name or ID...">
+      </div>
+
+      @if (isLoading) {
+        <app-spinner message="Loading incidents data..."></app-spinner>
+      } @else if (errorMessage) {
+        <p class="text-center error-msg py-5">{{ errorMessage }}</p>
+      } @else {
+        <table class="custom-table">
+          <thead>
+            <tr>
+              <th>Analysis ID</th>
+              <th>Student Info</th>
+              <th>Emotion Detected</th>
+              <th>Behavior Detected</th>
+              <th>Date & Time</th>
+              <th class="actions-col">Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            @if (incidents.length === 0) {
+              <tr><td colspan="6" class="text-center py-5">No incidents recorded yet.</td></tr>
+            } @else {
+              @for (incident of incidents; track incident.analysisId) {
+                <tr>
+                  <td class="fw-bold text-muted">#{{ incident.analysisId }}</td>
+                  <td>
+                    <div class="user-name-col">
+                      <img [src]="getFallbackImage(incident.studentId)+'&background=2563eb&color=fff&bold=true&size=64'" alt="Student Avatar"  class="avatar">
+                      <div class="user-info">
+                        <span class="fw-bold">{{ getStudentName(incident.studentId) }}</span>
+                      </div>
+                    </div>
+                  </td>
+                  <td>
+                    <span class="risk-badge" [ngClass]="getEmotionClass(incident.emotion)">
+                      {{ incident.emotion }} ({{ (incident.emotionConfidence * 100).toFixed(0) }}%)
+                    </span>
+                  </td>
+                  <td>
+                    <span class="risk-badge" [ngClass]="getBehaviorClass(incident.behavior)">
+                      {{ incident.behavior }} ({{ (incident.behaviorConfidence * 100).toFixed(0) }}%)
+                    </span>
+                  </td>
+                  <td class="text-muted fw-bold">
+                    {{ incident.createdAt | date:'MMM d, y, h:mm a' }}
+                  </td>
+                  <td>
+                    <div class="action-icons">
+                      <i class="bi bi-eye neutral" (click)="openImageModal(incident.imageUrl)" title="View Image"></i>
+                    </div>
+                  </td>
+                </tr>
+              }
+            }
+          </tbody>
+        </table>
+      }
+    </app-table-card>
+
+    @if (isImageModalOpen) {
+      <app-incident-image
+        [imageUrl]="selectedImageUrl"
+        (closeModal)="closeImageModal()">
+      </app-incident-image>
+    }
+  </div>
+</div>

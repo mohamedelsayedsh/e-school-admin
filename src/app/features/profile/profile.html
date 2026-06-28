@@ -3,7 +3,7 @@
   <app-navbar [pageTitle]="profileTitle"></app-navbar>
 
   @if (isLoading) {
-    <p class="text-center text-muted">Loading profile...</p>
+    <app-spinner message="Loading Profile...."></app-spinner>
   }
   @else if (errorMessage) {
     <div class="alert-error">{{ errorMessage }}</div>
@@ -21,10 +21,10 @@
         </app-profile-overview>
       </div>
 
-      @if (!isParent && !isAdmin) {
+      @if (isStudent) {
         <div class="profile-column">
           <h3 class="column-title">Activity</h3>
-          <app-profile-activity></app-profile-activity>
+          <app-profile-activity [studentId]="viewedUser!.id"></app-profile-activity>
         </div>
       }
 

@@ -7,10 +7,11 @@ import { ProfileActivity } from './profile-activity/profile-activity';
 import { UserService } from '../../core/services/user';
 import { ParentStudentService } from '../../core/services/parent-student';
 import { User } from '../../core/models/user';
+import { Spinner } from "../../shared/spinner/spinner";
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, Navbar, ProfileOverview, ProfileActivity],
+  imports: [CommonModule, Navbar, ProfileOverview, ProfileActivity, Spinner],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })

@@ -3,17 +3,12 @@
   <app-navbar pageTitle="Report Deep Dive"></app-navbar>
 
   @if (isLoading) {
-    <div class="loading-state">
-      <div class="spinner"></div>
-      <p>Loading report details...</p>
-    </div>
-  } @else if (!report) {
-    <div class="alert alert-error">Report not found or failed to load.</div>
-  } @else {
+    <app-spinner message="Loading report details..."></app-spinner>
+  } @else if (errorMessage) {
+    <div class="alert alert-error">{{ errorMessage }}</div>
+  } @else if (report) {
 
-    <button class="btn-back" (click)="goBack()">
-      <i class="bi bi-arrow-left"></i> Back to Reports
-    </button>
+    <app-back-button routePath="/reports"></app-back-button>
 
     <!-- Metric cards row -->
     <div class="metrics-row">
@@ -37,6 +32,27 @@
             @if (report.riskLevel === 'High') { <i class="bi bi-exclamation-circle-fill"></i> }
           </span>
         </span>
+      </div>
+
+      <!-- Student card -->
+      <div class="metric-card student-card" (click)="goToStudent()" [class.student-card-clickable]="student">
+        <span class="metric-label">Student</span>
+        @if (student) {
+          <img
+            class="student-avatar"
+            [src]="'https://ui-avatars.com/api/?name=' + student.userName + '&background=2563eb&color=fff&size=96'"
+            [alt]="student.userName">
+          <span class="student-name">{{ student.userName }}</span>
+          <span class="student-role">{{ student.className || student.role?.roleName || 'Student' }}</span>
+          <span class="student-link">
+            <i class="bi bi-box-arrow-up-right"></i> View Profile
+          </span>
+        } @else {
+          <div class="student-placeholder">
+            <i class="bi bi-person-circle"></i>
+            <span>Student #{{ report.studentId }}</span>
+          </div>
+        }
       </div>
     </div>
 

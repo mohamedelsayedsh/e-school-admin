@@ -31,13 +31,13 @@
 </div>
 
 @if (relationLabel()) {
-  <div class="table-card profile-card mt-4">
+  <div class="table-card profile-card mt-4 clickable-card" (click)="goToRelatedUser()">
     <div class="card-label">{{ relationLabel() }}</div>
 
     @if (relatedUser()) {
       <div class="profile-header compact">
         <img
-          [src]="'https://ui-avatars.com/api/?name=' + relatedUser()!.userName + '&background=random&size=96'"
+          [src]="'https://ui-avatars.com/api/?name=' + relatedUser()!.userName + '&background=random&color=fff&size=96'"
           class="profile-avatar-img small"
           alt="Related user picture">
         <div class="profile-identity">

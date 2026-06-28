@@ -2,35 +2,34 @@
 
   <app-navbar pageTitle="Reports Management Dashboard"></app-navbar>
 
-  <div class="table-card">
+  <app-table-card title="Reports Registry">
 
-    <div class="table-header">
-      <h2>Reports Registry</h2>
-      <div class="table-actions">
-        <select class="role-filter" [(ngModel)]="filterWeek" (change)="applyFilters()">
-          <option value="">All Weeks</option>
-          @for (week of availableWeeks; track week) {
-            <option [value]="week">Week {{ week }}</option>
-          }
-        </select>
-        <select class="role-filter" [(ngModel)]="filterRisk" (change)="applyFilters()">
-          <option value="">All Risk Levels</option>
-          <option value="High">High</option>
-          <option value="Medium">Medium</option>
-          <option value="Low">Low</option>
-        </select>
-        <select class="role-filter" [(ngModel)]="filterStatus" (change)="applyFilters()">
-          <option value="">All Statuses</option>
-          <option value="Approved">Approved</option>
-          <option value="Pending">Pending</option>
-        </select>
-        <button class="btn-primary-solid">
-          <i class="bi bi-download"></i> Export
-        </button>
-      </div>
+    <div table-actions class="filters-group">
+      <select
+        class="role-filter"
+        [(ngModel)]="filterRisk"
+        (change)="applyFilters()">
+        <option value="">All Risk Levels</option>
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+      </select>
+
+      <select
+        class="role-filter"
+        [(ngModel)]="filterStatus"
+        (change)="applyFilters()">
+        <option value="">All Statuses</option>
+        <option value="Approved">Approved</option>
+        <option value="Pending">Pending</option>
+      </select>
     </div>
 
-    <div class="table-responsive">
+    @if (isLoading) {
+      <app-spinner message="Loading reports data..."></app-spinner>
+    } @else if (errorMessage) {
+      <p class="text-center error-msg">{{ errorMessage }}</p>
+    } @else {
       <table class="custom-table">
         <thead>
           <tr>
@@ -39,16 +38,14 @@
             <th>Week</th>
             <th>Risk Level</th>
             <th>Status</th>
-            <th>Actions</th>
+            <th class="actions-col">Actions</th>
           </tr>
         </thead>
         <tbody>
-          @if (isLoading) {
-            <tr><td colspan="6" class="text-center">Loading reports...</td></tr>
-          } @else if (errorMessage) {
-            <tr><td colspan="6" class="text-center error-msg">{{ errorMessage }}</td></tr>
-          } @else if (filteredReports.length === 0) {
-            <tr><td colspan="6" class="text-center">No reports found.</td></tr>
+          @if (filteredReports.length === 0) {
+            <tr>
+              <td colspan="6" class="text-center">No reports found.</td>
+            </tr>
           } @else {
             @for (report of filteredReports; track report.id; let i = $index) {
               <tr>
@@ -56,29 +53,41 @@
                 <td>
                   <div class="user-name-col">
                     <img
-                      [src]="'https://ui-avatars.com/api/?name=' + getStudentName(report.studentId) + '&background=2563eb&color=fff&size=64'"
                       class="avatar"
+                      [src]="'https://ui-avatars.com/api/?name=' + getStudentName(report.studentId) + '&background=2563eb&color=fff&size=64'"
                       alt="Student">
                     <span class="fw-bold">{{ getStudentName(report.studentId) }}</span>
                   </div>
                 </td>
                 <td class="text-muted">Week {{ report.weekNumber }}</td>
                 <td>
-                  <span class="risk-badge" [ngClass]="{
-                    'risk-high':   report.riskLevel === 'High',
-                    'risk-medium': report.riskLevel === 'Medium',
-                    'risk-low':    report.riskLevel === 'Low'
-                  }">{{ report.riskLevel | uppercase }}</span>
+                  <span
+                    class="risk-badge"
+                    [ngClass]="{
+                      'risk-high': report.riskLevel === 'High',
+                      'risk-medium': report.riskLevel === 'Medium',
+                      'risk-low': report.riskLevel === 'Low'
+                    }">
+                    {{ report.riskLevel | uppercase }}
+                  </span>
                 </td>
                 <td>
-                  <span class="status-badge" [ngClass]="{
-                    'status-approved': report.status === 'Approved',
-                    'status-pending':  report.status === 'Pending'
-                  }">{{ report.status | uppercase }}</span>
+                  <span
+                    class="status-badge"
+                    [ngClass]="{
+                      'status-approved': report.status === 'Approved',
+                      'status-pending': report.status === 'Pending'
+                    }">
+                    {{ report.status | uppercase }}
+                  </span>
                 </td>
                 <td>
                   <div class="action-icons">
-                    <i class="bi bi-eye" title="View Report" (click)="viewReportDetails(report.id)"></i>
+                    <i
+                      class="bi bi-eye"
+                      title="View Report"
+                      (click)="viewReportDetails(report.studentId)">
+                    </i>
                   </div>
                 </td>
               </tr>
@@ -86,7 +95,8 @@
           }
         </tbody>
       </table>
-    </div>
+    }
 
-  </div>
+  </app-table-card>
+
 </div>

@@ -1,0 +1,22 @@
+.btn-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  color: var(--text-muted);
+  padding: 8px 18px;
+  border-radius: 999px;
+  font-size: 0.88rem;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 24px;
+  transition: all 0.2s;
+  box-shadow: var(--shadow);
+}
+
+.btn-back:hover {
+  background: var(--primary-light);
+  color: var(--primary-darker);
+  transform: translateX(-3px);
+}

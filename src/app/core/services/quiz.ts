@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { ApiResponse } from '../models/api-response';
-import { CreateQuizDto, CreateQuizQuestionDto, Quiz } from '../models/quiz';
+import { CreateQuizDto, CreateQuizQuestionDto, Quiz, QuizAnalysis } from '../models/quiz';
 import { environment } from '../../../environments/environment';
 
 @Injectable({
@@ -24,5 +24,8 @@ export class QuizService {
     return this.http.post<ApiResponse<any>>(url,questionData);
   }
 
-
+  getAllQuizAnalyses(): Observable<ApiResponse<QuizAnalysis[]>> {
+    // apiUrl = /admin/quizzes
+    return this.http.get<ApiResponse<QuizAnalysis[]>>(`${this.apiUrl}/analyses`);
+  }
 }

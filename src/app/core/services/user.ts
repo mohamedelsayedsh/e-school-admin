@@ -28,4 +28,13 @@ export class UserService {
     const params = new HttpParams().set('id', userId);
     return this.http.delete<ApiResponse<void>>(this.apiUrl, { params });
   }
+  registerUser(data: {
+    userName: string;
+    email: string;
+    password: string;
+    phoneNumber: string;
+    roleID: number;
+  }): Observable<ApiResponse<any>> {
+    return this.http.post<ApiResponse<any>>(`${environment.apiUrl}/user/register`,data);
+  }
 }

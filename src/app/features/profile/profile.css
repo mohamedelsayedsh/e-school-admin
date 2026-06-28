@@ -19,5 +19,14 @@
 }
 .profile-grid:has(> :only-child) {
   grid-template-columns: 1fr;
-  max-width: 600px;
+  width: 100%;
+}
+
+.profile-grid:has(> :only-child) .profile-card {
+  max-width: 900px; /* or whatever feels right, instead of 600px */
+}
+.profile-grid.single-column {
+  grid-template-columns: 1fr;
+  display: block;
+  width: 100%;
 }

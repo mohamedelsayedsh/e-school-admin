@@ -1,1 +1,7 @@
-.actions-col { width: 110px; }
+.custom-table td:nth-child(2) {
+
+  font-weight: 600;
+
+  color: var(--text-dark);
+
+}

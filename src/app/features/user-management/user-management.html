@@ -2,33 +2,34 @@
 
   <app-navbar pageTitle="User Management"></app-navbar>
 
-  <div class="table-card">
-    <div class="table-header">
-      <h2>All Users List</h2>
-      <div class="table-actions">
+  <app-table-card title="All Users List">
 
-        <select
-          class="role-filter"
-          [value]="selectedRoleId"
-          (change)="onRoleFilterChange($any($event.target).value)">
-          <option value="">All Roles</option>
-          <option value="2">Student</option>
-          <option value="4">Parent</option>
-        </select>
-
-        <div class="search-box">
-          <i class="bi bi-search"></i>
-          <input
-            type="text"
-            placeholder="Search by Name, Email or Phone."
-            [value]="searchTerm"
-            (input)="onSearchChange($any($event.target).value)" />
-        </div>
-
-      </div>
+    <div table-actions class="search-box">
+      <i class="bi bi-search"></i>
+      <input
+        type="text"
+        placeholder="Search by name, email or phone..."
+        [value]="searchTerm"
+        (input)="onSearchChange($any($event.target).value)" />
     </div>
 
-    <div class="table-responsive">
+    <select
+      table-actions
+      class="role-filter"
+      [value]="selectedRoleId"
+      (change)="onRoleFilterChange($any($event.target).value)">
+      <option value="">All Roles</option>
+      <option value="1">Admin</option>
+      <option value="2">Student</option>
+      <option value="3">Owner</option>
+      <option value="4">Parent</option>
+    </select>
+
+    @if (isLoading) {
+      <app-spinner message="Loading users data..."></app-spinner>
+    } @else if (errorMessage) {
+      <p class="text-center error-msg">{{ errorMessage }}</p>
+    } @else {
       <table class="custom-table">
         <thead>
           <tr>
@@ -37,32 +38,32 @@
             <th>Email</th>
             <th>Phone</th>
             <th>Role</th>
-            <th>Action</th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
-        @if (isLoading) {
-          <tr><td colspan="8" class="text-center">Loading users data...</td></tr>
-        }
-        @else if (errorMessage) {
-          <tr><td colspan="8" class="text-center error-msg">{{ errorMessage }}</td></tr>
-        }
-        @else if (filteredUsers.length === 0) {
-          <tr><td colspan="8" class="text-center">No users found.</td></tr>
-        }
-        @else {
-          @for (user of filteredUsers; track user.id; let i = $index) {
-          <tr>
-            <td>{{ (i + 1) < 10 ? '0' + (i + 1) : (i + 1) }}</td>
-            <td>
-              <div class="user-name-col">
-                <img [src]="'https://ui-avatars.com/api/?name=' + user.userName" class="avatar" alt="User">
-                  {{ user.userName }}
-              </div>
+          @if (filteredUsers.length === 0) {
+            <tr><td colspan="6" class="text-center">No users found.</td></tr>
+          } @else {
+            @for (user of filteredUsers; track user.id; let i = $index) {
+              <tr>
+                <td>{{ (i + 1) < 10 ? '0' + (i + 1) : (i + 1) }}</td>
+                <td>
+                  <div class="user-name-col">
+                    <img
+                      class="avatar"
+                      [src]="'https://ui-avatars.com/api/?name=' + user.userName + '&background=2563eb&color=fff&bold=true&size=64'"
+                      alt="User" />
+                    <div class="user-info">
+                      <span class="fw-bold">{{ user.userName }}</span>
+                    </div>
+                  </div>
                 </td>
                 <td class="text-muted">{{ user.email || 'N/A' }}</td>
                 <td class="text-muted">{{ user.phoneNumber || 'N/A' }}</td>
-                <td class="text-muted">{{ user.role?.roleName || 'N/A' }}</td>
+                <td>
+                  <span class="role-badge">{{ user.role?.roleName || 'N/A' }}</span>
+                </td>
                 <td>
                   <div class="action-icons">
                     <i class="bi bi-eye" title="View" (click)="viewUserProfile(user.id)"></i>
@@ -74,10 +75,12 @@
           }
         </tbody>
       </table>
-    </div>
-  </div>
+    }
+
+  </app-table-card>
 
 </div>
+
 @if (userToDelete) {
   <div class="modal-overlay">
     <div class="modal-card">
@@ -91,11 +94,10 @@
 
       <div class="modal-body">
         @if (deleteError) {
-          <div class="alert-error">{{ deleteError }}</div>
+          <div class="alert alert-error">{{ deleteError }}</div>
         }
         <p>
-          Are you sure you want to delete
-          <strong>{{ userToDelete.userName }}</strong>?
+          Are you sure you want to delete <strong>{{ userToDelete.userName }}</strong>?
           This action cannot be undone.
         </p>
       </div>
@@ -104,7 +106,7 @@
         <button type="button" class="btn-cancel" (click)="cancelDelete()" [disabled]="isDeleting">
           Cancel
         </button>
-        <button type="button" class="btn-primary" style="background: var(--danger);" (click)="confirmDelete()" [disabled]="isDeleting">
+        <button type="button" class="btn-danger" (click)="confirmDelete()" [disabled]="isDeleting">
           {{ isDeleting ? 'Deleting...' : 'Delete User' }}
         </button>
       </div>

@@ -1,0 +1,23 @@
+<div class="modal-overlay" (click)="closeModal.emit()">
+
+  <div class="modal-card modal-lg" (click)="$event.stopPropagation()">
+
+    <div class="modal-header">
+      <h3>Image Capture</h3>
+      <button class="btn-close-icon" (click)="closeModal.emit()">
+        <i class="bi bi-x-lg"></i>
+      </button>
+    </div>
+
+    <div class="modal-body text-center p-0">
+      <img [src]="imageUrl()" alt="Full View"
+          style="width: 100%; max-height: 70vh; object-fit: contain; background: #f8fafc;">
+    </div>
+
+    <div class="modal-footer">
+      <button class="btn-cancel" (click)="closeModal.emit()">Close</button>
+    </div>
+
+  </div>
+
+</div>

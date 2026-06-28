@@ -5,10 +5,12 @@ import { Quiz } from '../../../core/models/quiz';
 import { CreateQuiz } from "../create-quiz/create-quiz";
 import { QuizBuilder } from "../quiz-builder/quiz-builder";
 import { ViewQuiz } from "../view-quiz/view-quiz";
+import { Spinner } from "../../../shared/spinner/spinner";
+import { TableCard } from "../../../shared/table-card/table-card";
 
 @Component({
   selector: 'app-quizzes-list',
-  imports: [Navbar, CreateQuiz, QuizBuilder, ViewQuiz],
+  imports: [Navbar, CreateQuiz, QuizBuilder, ViewQuiz, Spinner, TableCard],
   templateUrl: './quizzes-list.html',
   styleUrl: './quizzes-list.css',
 })

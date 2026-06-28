@@ -4,10 +4,12 @@ import { UserService } from '../../core/services/user';
 import { Navbar } from '../../shared/navbar/navbar';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { Spinner } from "../../shared/spinner/spinner";
+import { TableCard } from "../../shared/table-card/table-card";
 
 @Component({
   selector: 'app-user-management',
-  imports: [CommonModule, Navbar],
+  imports: [CommonModule, Navbar, Spinner, TableCard],
   templateUrl: './user-management.html',
   styleUrl: './user-management.css',
 })

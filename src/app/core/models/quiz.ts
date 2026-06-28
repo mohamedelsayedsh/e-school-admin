@@ -25,3 +25,10 @@ export interface CreateQuizQuestionDto {
   options: QuizQuestionOption[];
 }
 
+export interface QuizAnalysis {
+  id: number;
+  studentId: number;
+  risk_score: number;
+  risk_level: string;
+  createdAt: string;
+}

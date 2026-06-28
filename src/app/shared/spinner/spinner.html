@@ -1,0 +1,11 @@
+<div class="spinner-wrapper" [class.spinner-fullpage]="fullPage()">
+  <div class="spinner-ring">
+    <div></div>
+    <div></div>
+    <div></div>
+    <div></div>
+  </div>
+  @if (message()) {
+    <p class="spinner-message">{{ message() }}</p>
+  }
+</div>

@@ -2,16 +2,24 @@
 
   <app-navbar pageTitle="Quizzes Management Dashboard"></app-navbar>
 
-  <div class="table-card">
+  <app-table-card title="All Quizzes List">
 
-    <div class="table-header">
-      <h2>All Quizzes List</h2>
-      <button class="btn-primary" (click)="openCreateQuizModal()">
-        <i class="bi bi-plus-lg"></i> Create New Quiz
+    <div table-actions>
+      <button
+        class="btn-primary"
+        (click)="openCreateQuizModal()">
+        <i class="bi bi-plus-lg"></i>
+        Create New Quiz
       </button>
     </div>
 
-    <div class="table-responsive">
+    @if (isLoading) {
+      <app-spinner
+        message="Loading quizzes data...">
+      </app-spinner>
+    } @else if (errorMessage) {
+      <p class="text-center error-msg py-5">{{ errorMessage }}</p>
+    } @else {
       <table class="custom-table">
         <thead>
           <tr>
@@ -22,45 +30,58 @@
           </tr>
         </thead>
         <tbody>
-
-          @if (isLoading) {
-            <tr><td colspan="4" class="text-center">Loading quizzes data...</td></tr>
-          }
-          @else if (errorMessage) {
-            <tr><td colspan="4" class="text-center error-msg">{{ errorMessage }}</td></tr>
-          }
-          @else if (quizzes.length === 0) {
-            <tr><td colspan="4" class="text-center">No quizzes found. Click 'Create New Quiz' to add one.</td></tr>
-          }
-
-          @else {
+          @if (quizzes.length === 0) {
+            <tr>
+              <td colspan="4" class="text-center py-5">
+                No quizzes found. Click "Create New Quiz" to add one.
+              </td>
+            </tr>
+          } @else {
             @for (quiz of quizzes; track quiz.id; let i = $index) {
               <tr>
                 <td>{{ (i + 1) < 10 ? '0' + (i + 1) : (i + 1) }}</td>
-                <td class="fw-bold">{{ quiz.title }}</td>
-                <td class="text-muted">{{ quiz.description || 'No description provided' }}</td>
+                <td>
+                  <span class="fw-bold">{{ quiz.title }}</span>
+                </td>
+                <td class="text-muted">
+                  {{ quiz.description || 'No description provided' }}
+                </td>
                 <td>
                   <div class="action-icons">
-                    <i class="bi bi-eye" title="View" (click)="viewQuiz(quiz)"></i>
-                    <i class="bi bi-pencil-square" (click)="editQuiz(quiz.id)" title="Edit Questions"></i>
-                    <i class="bi bi-trash danger" title="Delete"></i>
+                    <i
+                      class="bi bi-eye"
+                      title="View Quiz"
+                      (click)="viewQuiz(quiz)">
+                    </i>
+                    <i
+                      class="bi bi-pencil-square"
+                      title="Edit Questions"
+                      (click)="editQuiz(quiz.id)">
+                    </i>
+                    <i
+                      class="bi bi-trash danger"
+                      title="Delete Quiz">
+                    </i>
                   </div>
                 </td>
               </tr>
             }
           }
-
         </tbody>
       </table>
-    </div>
-  </div>
+    }
+
+  </app-table-card>
+
 </div>
-@if(isModalOpen){
+
+@if (isModalOpen) {
   <app-create-quiz
-  (closeModal)="isModalOpen=false"
-  (quizCreated)="fetchQuizzes()">
+    (closeModal)="isModalOpen = false"
+    (quizCreated)="fetchQuizzes()">
   </app-create-quiz>
 }
+
 @if (isBuilderModalOpen) {
   <app-quiz-builder
     [quizId]="selectedQuizId"
@@ -68,6 +89,7 @@
     (closeModal)="isBuilderModalOpen = false">
   </app-quiz-builder>
 }
+
 @if (isViewModalOpen && selectedViewQuiz) {
   <app-view-quiz
     [quiz]="selectedViewQuiz"
