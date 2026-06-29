@@ -65,24 +65,24 @@ export class ReportsList implements OnInit {
     this.destroyRef.onDestroy(() => sub.unsubscribe());
   }
 
-private loadStudentNames() {
-    const sub = this.userService.getAllUsers().subscribe({
-      next: (res) => {
-        if (res.isSuccess && res.result) {
-          res.result.forEach(user => this.studentNames.set(user.id, user.userName));
+  private loadStudentNames() {
+      const sub = this.userService.getAllUsers().subscribe({
+        next: (res) => {
+          if (res.isSuccess && res.result) {
+            res.result.forEach(user => this.studentNames.set(user.id, user.userName));
+          }
+          this.cdr.detectChanges();
+        },
+        error: () => {
+          this.cdr.detectChanges();
         }
-        this.cdr.detectChanges();
-      },
-      error: () => {
-        this.cdr.detectChanges();
-      }
-    });
-    this.destroyRef.onDestroy(() => sub.unsubscribe());
-  }
+      });
+      this.destroyRef.onDestroy(() => sub.unsubscribe());
+    }
 
-  getStudentName(studentId: number): string {
-    return this.studentNames.get(studentId) ?? `Student #${studentId}`;
-  }
+    getStudentName(studentId: number): string {
+      return this.studentNames.get(studentId) ?? `Student #${studentId}`;
+    }
 
   applyFilters() {
     let result = this.reports;
