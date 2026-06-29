@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { AuthService } from '../../core/services/auth';
 import { Router } from '@angular/router';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -12,9 +12,9 @@ import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angula
 export class Login {
   private authService = inject(AuthService);
   private router = inject(Router);
-  private cdr = inject(ChangeDetectorRef);
-  errorMessage = '';
-  isLoading = false;
+
+  errorMessage = signal('');
+  isLoading = signal(false);
 
   loginForm = new FormGroup({
     userName: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -29,8 +29,8 @@ export class Login {
       return;
     };
 
-    this.isLoading = true;
-    this.errorMessage = '';
+    this.isLoading.set(true);
+    this.errorMessage.set('');
 
     const credentials = {
       userName: this.loginForm.value.userName!,
@@ -42,23 +42,21 @@ export class Login {
         if (response.isSuccess) {
           this.router.navigate(['/users']);
         } else {
-          this.errorMessage = response.errorMessages?.join(', ') || 'Invalid username or password';
-          this.cdr.detectChanges();
-          this.isLoading = false;
+          this.errorMessage.set(response.errorMessages?.join(', ') || 'Invalid username or password');
+          this.isLoading.set(false);
         }
       },
       error: (err) => {
-        this.isLoading = false;
-        if(err.error && err.error.errorMessages && err.error.errorMessages.length > 0){
-          this.errorMessage = err.error.errorMessages.join(', ');
+        this.isLoading.set(false);
+        if (err.error && err.error.errorMessages && err.error.errorMessages.length > 0) {
+          this.errorMessage.set(err.error.errorMessages.join(', '));
         }
-        else if(err.status === 401 || err.status === 400){
-          this.errorMessage = 'Invalid username or password';
+        else if (err.status === 401 || err.status === 400) {
+          this.errorMessage.set('Invalid username or password');
         }
         else {
-          this.errorMessage = 'An error occurred. Please try again later.';
+          this.errorMessage.set('An error occurred. Please try again later.');
         }
-        this.cdr.detectChanges();
       }
     });
   }

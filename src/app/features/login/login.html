@@ -49,14 +49,14 @@
         }
       </div>
 
-      @if (errorMessage) {
+      @if (errorMessage()) {
         <div class="error-banner">
-          <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage }}
+          <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage() }}
         </div>
       }
 
-      <button type="submit" class="login-btn" [disabled]="isLoading">
-        {{ isLoading ? 'Logging in...' : 'Sign In' }}
+      <button type="submit" class="login-btn" [disabled]="isLoading()">
+        {{ isLoading() ? 'Logging in...' : 'Sign In' }}
       </button>
 
     </form>
