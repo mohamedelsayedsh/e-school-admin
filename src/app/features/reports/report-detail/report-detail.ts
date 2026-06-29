@@ -51,7 +51,6 @@ export class ReportDetail implements OnInit {
     this.reportService.getReportById(id).subscribe({
       next: (res: any) => {
         if (res.isSuccess && res.result) {
-          console.log(res);
           if (Array.isArray(res.result)) {
             this.report = res.result.length > 0 ? res.result[0] : null;
           } else {

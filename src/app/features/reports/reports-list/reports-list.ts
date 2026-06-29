@@ -46,7 +46,6 @@ export class ReportsList implements OnInit {
     const sub = this.reportService.getAllReports().subscribe({
       next: (response) => {
         if (response.isSuccess && response.result) {
-          console.log(response);
           this.reports = response.result;
           this.filteredReports = this.reports;
           this.loadStudentNames();

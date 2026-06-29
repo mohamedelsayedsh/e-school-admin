@@ -55,7 +55,6 @@ export class QuizzesList  implements OnInit{
     this.destroyRef.onDestroy(() => sub.unsubscribe());
   }
   openCreateQuizModal() {
-    console.log('Open Create Quiz Modal clicked!');
     this.isModalOpen= true;
   }
   editQuiz(quizId: number) {
@@ -68,7 +67,6 @@ export class QuizzesList  implements OnInit{
     }
     this.isBuilderModalOpen = true;
     this.cdr.detectChanges();
-    console.log('Navigate to Edit Quiz with ID:', quizId);
   }
   viewQuiz(quiz: Quiz){
     this.selectedViewQuiz = quiz;
