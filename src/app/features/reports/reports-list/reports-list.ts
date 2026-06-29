@@ -65,27 +65,19 @@ export class ReportsList implements OnInit {
     this.destroyRef.onDestroy(() => sub.unsubscribe());
   }
 
-  private loadStudentNames() {
-    const uniqueIds = [...new Set(this.reports.map(r => r.studentId))];
-    let pending = uniqueIds.length;
-    if (pending === 0) return;
-
-    uniqueIds.forEach(id => {
-      const sub = this.userService.getUserById(id).subscribe({
-        next: (res) => {
-          if (res.isSuccess && res.result) {
-            this.studentNames.set(id, res.result.userName);
-          }
-          pending--;
-          if (pending === 0) this.cdr.detectChanges();
-        },
-        error: () => {
-          pending--;
-          if (pending === 0) this.cdr.detectChanges();
+private loadStudentNames() {
+    const sub = this.userService.getAllUsers().subscribe({
+      next: (res) => {
+        if (res.isSuccess && res.result) {
+          res.result.forEach(user => this.studentNames.set(user.id, user.userName));
         }
-      });
-      this.destroyRef.onDestroy(() => sub.unsubscribe());
+        this.cdr.detectChanges();
+      },
+      error: () => {
+        this.cdr.detectChanges();
+      }
     });
+    this.destroyRef.onDestroy(() => sub.unsubscribe());
   }
 
   getStudentName(studentId: number): string {

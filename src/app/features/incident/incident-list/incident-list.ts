@@ -8,8 +8,6 @@ import { Navbar } from '../../../shared/navbar/navbar';
 import { TableCard } from '../../../shared/table-card/table-card';
 import { IncidentImage } from "../incident-image/incident-image";
 import { Spinner } from '../../../shared/spinner/spinner';
-// import { Spinner } from '../../../shared/spinner/spinner'; <-- Ensure your spinner is imported if standalone
-
 @Component({
   selector: 'app-incident-list',
   imports: [CommonModule, Navbar, TableCard, DatePipe, IncidentImage, Spinner],
@@ -18,12 +16,12 @@ import { Spinner } from '../../../shared/spinner/spinner';
 })
 export class IncidentList implements OnInit {
   private incidentService = inject(IncidentService);
-  private userService = inject(UserService); // <-- Injecting UserService
+  private userService = inject(UserService);
   private router = inject(Router);
   private cdr = inject(ChangeDetectorRef);
 
   incidents: Incident[] = [];
-  userMap = new Map<number, string>(); // <-- Map to store Student ID -> User Name
+  userMap = new Map<number, string>();
   isLoading = true;
   errorMessage = '';
 
@@ -33,8 +31,6 @@ export class IncidentList implements OnInit {
   ngOnInit() {
     this.fetchData();
   }
-
-  // Fetch users first to populate the map, then fetch incidents
   fetchData() {
     this.userService.getAllUsers().subscribe({
       next: (res: any) => {
@@ -47,7 +43,7 @@ export class IncidentList implements OnInit {
       },
       error: (err) => {
         console.error('Error fetching users:', err);
-        this.fetchIncidents(); // Still fetch incidents even if users fail
+        this.fetchIncidents();
       }
     });
   }
@@ -71,8 +67,6 @@ export class IncidentList implements OnInit {
       }
     });
   }
-
-  // Helper method to get the student name or fallback
   getStudentName(studentId: number): string {
     return this.userMap.get(studentId) || `Student #${studentId}`;
   }
@@ -93,7 +87,7 @@ export class IncidentList implements OnInit {
 
     if (dangerEmotions.includes(emotion)) return 'risk-high';
     if (successEmotions.includes(emotion)) return 'status-approved';
-    return 'status-pending'; // Default (Neutral, Surprise)
+    return 'status-pending';
   }
 
   getBehaviorClass(behavior: string): string {
