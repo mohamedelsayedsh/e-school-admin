@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, input, OnInit } from '@angular/core';
+import { Component, inject, input, OnInit, signal } from '@angular/core';
 import { AuthService } from '../../core/services/auth';
 import { Router } from '@angular/router';
 
@@ -9,15 +9,12 @@ import { Router } from '@angular/router';
   styleUrl: './navbar.css',
 })
 export class Navbar implements OnInit {
-  // @Input() pageTitle: string = '';
   pageTitle = input.required<string>();
   private router = inject(Router);
-  private cdr = inject(ChangeDetectorRef);
   private authService = inject(AuthService);
-  userName: string = '';
+  userName = signal('');
   ngOnInit(){
-    this.userName = this.authService.getUserName();
-    this.cdr.detectChanges();
+    this.userName.set(this.authService.getUserName());
   }
   onLogout(){
     this.authService.logout();
