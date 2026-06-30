@@ -13,18 +13,18 @@
         </div>
       </div>
 
-      @if (errorMessage) {
+      @if (errorMessage()) {
         <div class="alert alert-error">
-          <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage }}
+          <i class="bi bi-exclamation-triangle-fill"></i> {{ errorMessage() }}
         </div>
       }
-      @if (successMessage) {
+      @if (successMessage()) {
         <div class="alert alert-success">
-          <i class="bi bi-check-circle-fill"></i> {{ successMessage }}
+          <i class="bi bi-check-circle-fill"></i> {{ successMessage() }}
         </div>
       }
 
-      @if (isLoading) {
+      @if (isLoading()) {
         <div class="py-5">
           <app-spinner message="Registering new user..."></app-spinner>
         </div>
@@ -57,10 +57,10 @@
               <div class="form-group">
                 <label>Password <span class="required">*</span></label>
                 <div class="input-icon-wrap">
-                  <input [type]="showPassword ? 'text' : 'password'" class="form-control" formControlName="password"
+                  <input [type]="showPassword() ? 'text' : 'password'" class="form-control" formControlName="password"
                     placeholder="e.g. Admin@123" [class.input-error]="f['password'].invalid && f['password'].touched" />
-                  <i class="bi password-toggle" [class.bi-eye]="!showPassword" [class.bi-eye-slash]="showPassword"
-                    (click)="showPassword = !showPassword"></i>
+                  <i class="bi password-toggle" [class.bi-eye]="!showPassword()" [class.bi-eye-slash]="showPassword()"
+                    (click)="showPassword.set(!showPassword)"></i>
                 </div>
 
                 @if (f['password'].touched && f['password'].invalid) {

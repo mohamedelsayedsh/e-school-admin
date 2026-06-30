@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { Navbar } from "../../../shared/navbar/navbar";
 import { QuizService } from '../../../core/services/quiz';
 import { Quiz } from '../../../core/models/quiz';
@@ -17,59 +17,55 @@ import { TableCard } from "../../../shared/table-card/table-card";
 export class QuizzesList  implements OnInit{
 
   private quizService = inject(QuizService);
-  private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
 
-  quizzes: Quiz[] = [];
-  isLoading = true;
-  errorMessage = '';
-  isModalOpen = false;
-  isBuilderModalOpen = false;
-  isViewModalOpen = false;
-  selectedQuizId: number = 0;
-  selectedNextOrder: number =1;
-  selectedViewQuiz: Quiz | null = null;
+  quizzes = signal<Quiz[]>([]);
+  isLoading = signal(true);
+  errorMessage = signal('');
+  isModalOpen = signal(false);
+  isBuilderModalOpen = signal(false);
+  isViewModalOpen = signal(false);
+  selectedQuizId = signal(0);
+  selectedNextOrder = signal(1);
+  selectedViewQuiz = signal<Quiz | null>(null);
 
   ngOnInit(){
     this.fetchQuizzes();
   }
 
   fetchQuizzes(){
-    this.isLoading = true;
+    this.isLoading.set(true);
     const sub = this.quizService.getAllQuizzes().subscribe({
       next: (response) => {
         if(response.isSuccess) {
-          this.quizzes = response.result || [];
+          this.quizzes.set(response.result || []);
         } else {
-          this.errorMessage = response.errorMessages?.join(', ') || 'Failed to load quizzes.';
+          this.errorMessage.set(response.errorMessages?.join(', ') || 'Failed to load quizzes.');
         }
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        this.isLoading.set(false);
       },
       error: (err) => {
-        this.errorMessage = 'Connection error. Please check your backend.'
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        this.errorMessage.set('Connection error. Please check your backend.');
+        this.isLoading.set(false);
       }
     })
     this.destroyRef.onDestroy(() => sub.unsubscribe());
   }
   openCreateQuizModal() {
-    this.isModalOpen= true;
+    this.isModalOpen.set(true);
   }
   editQuiz(quizId: number) {
-    this.selectedQuizId = quizId;
-    const selectedQuiz = this.quizzes.find(q => q.id === quizId);
+    this.selectedQuizId.set(quizId);
+    const selectedQuiz = this.quizzes().find(q => q.id === quizId);
     if(selectedQuiz && selectedQuiz.questions){
-      this.selectedNextOrder = selectedQuiz.questions.length + 1;
+      this.selectedNextOrder.set(selectedQuiz.questions.length + 1);
     } else{
-      this.selectedNextOrder = 1;
+      this.selectedNextOrder.set(1);
     }
-    this.isBuilderModalOpen = true;
-    this.cdr.detectChanges();
+    this.isBuilderModalOpen.set(true);
   }
   viewQuiz(quiz: Quiz){
-    this.selectedViewQuiz = quiz;
-    this.isViewModalOpen = true;
+    this.selectedViewQuiz.set(quiz);
+    this.isViewModalOpen.set(true);
   }
 }

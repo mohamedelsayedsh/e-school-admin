@@ -9,8 +9,8 @@
     </div>
 
     <div class="modal-body" style="max-height: 80vh; overflow-y: auto;">
-      @if (successMessage) { <div class="alert alert-success">{{ successMessage }}</div> }
-      @if (errorMessage) { <div class="alert alert-danger">{{ errorMessage }}</div> }
+      @if (successMessage()) { <div class="alert alert-success">{{ successMessage() }}</div> }
+      @if (errorMessage()) { <div class="alert alert-danger">{{ errorMessage() }}</div> }
 
       <form [formGroup]="questionForm" (ngSubmit)="onSubmit()">
         <div class="form-group">
@@ -48,8 +48,8 @@
 
         <div class="modal-footer mt-4">
           <button type="button" class="btn-cancel" (click)="closeModal.emit()">Done & Close</button>
-          <button type="submit" class="btn-primary" [disabled]="isLoading">
-            {{ isLoading ? 'Saving...' : 'Save & Add Next Question' }}
+          <button type="submit" class="btn-primary" [disabled]="isLoading()">
+            {{ isLoading() ? 'Saving...' : 'Save & Add Next Question' }}
           </button>
         </div>
       </form>

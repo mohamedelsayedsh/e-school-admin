@@ -25,10 +25,10 @@
       <option value="4">Parent</option>
     </select>
 
-    @if (isLoading) {
+    @if (isLoading()) {
       <app-spinner message="Loading users data..."></app-spinner>
-    } @else if (errorMessage) {
-      <p class="text-center error-msg">{{ errorMessage }}</p>
+    } @else if (errorMessage()) {
+      <p class="text-center error-msg">{{ errorMessage() }}</p>
     } @else {
       <table class="custom-table">
         <thead>
@@ -45,7 +45,7 @@
           @if (filteredUsers.length === 0) {
             <tr><td colspan="6" class="text-center">No users found.</td></tr>
           } @else {
-            @for (user of filteredUsers; track user.id; let i = $index) {
+            @for (user of filteredUsers(); track user.id; let i = $index) {
               <tr>
                 <td>{{ (i + 1) < 10 ? '0' + (i + 1) : (i + 1) }}</td>
                 <td>
@@ -81,7 +81,7 @@
 
 </div>
 
-@if (userToDelete) {
+@if (userToDelete()) {
   <div class="modal-overlay">
     <div class="modal-card">
 
@@ -93,21 +93,21 @@
       </div>
 
       <div class="modal-body">
-        @if (deleteError) {
-          <div class="alert alert-error">{{ deleteError }}</div>
+        @if (deleteError()) {
+          <div class="alert alert-error">{{ deleteError() }}</div>
         }
         <p>
-          Are you sure you want to delete <strong>{{ userToDelete.userName }}</strong>?
+          Are you sure you want to delete <strong>{{ userToDelete()!.userName }}</strong>?
           This action cannot be undone.
         </p>
       </div>
 
       <div class="modal-footer">
-        <button type="button" class="btn-cancel" (click)="cancelDelete()" [disabled]="isDeleting">
+        <button type="button" class="btn-cancel" (click)="cancelDelete()" [disabled]="isDeleting()">
           Cancel
         </button>
-        <button type="button" class="btn-danger" (click)="confirmDelete()" [disabled]="isDeleting">
-          {{ isDeleting ? 'Deleting...' : 'Delete User' }}
+        <button type="button" class="btn-danger" (click)="confirmDelete()" [disabled]="isDeleting()">
+          {{ isDeleting() ? 'Deleting...' : 'Delete User' }}
         </button>
       </div>
 

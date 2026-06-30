@@ -1,10 +1,10 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { Navbar } from '../../../shared/navbar/navbar';
 import { UserService } from '../../../core/services/user';
-import { Spinner } from '../../../shared/spinner/spinner'; // Make sure this is imported
+import { Spinner } from '../../../shared/spinner/spinner';
 
 interface RoleOption {
   id: number;
@@ -24,14 +24,13 @@ export class RegisterUser implements OnInit {
   private fb = inject(FormBuilder);
   private userService = inject(UserService);
   private router = inject(Router);
-  private cdr = inject(ChangeDetectorRef);
 
-  isLoading = true;
-  loadingMessage = 'Loading registration form...';
+  isLoading = signal(true);
+  loadingMessage = signal('Loading registration form...');
 
-  errorMessage = '';
-  successMessage = '';
-  showPassword = false;
+  errorMessage = signal('');
+  successMessage = signal('');
+  showPassword = signal(false);
 
   roles: RoleOption[] = [
     { id: 1, label: 'Admin',   icon: 'bi-shield-lock',  description: 'Full system access' },
@@ -62,8 +61,7 @@ export class RegisterUser implements OnInit {
 
     // Simulate page load waiting time (2 seconds)
     setTimeout(() => {
-      this.isLoading = false;
-      this.cdr.detectChanges();
+      this.isLoading.set(false);
     }, 500);
   }
 
@@ -76,8 +74,8 @@ export class RegisterUser implements OnInit {
 
   resetForm() {
     this.registerForm.reset();
-    this.errorMessage   = '';
-    this.successMessage = '';
+    this.errorMessage.set('');
+    this.successMessage.set('');
   }
 
   onSubmit() {
@@ -86,30 +84,27 @@ export class RegisterUser implements OnInit {
       return;
     }
 
-    this.isLoading      = true;
-    this.loadingMessage = 'Registering new user...';
-    this.errorMessage   = '';
-    this.successMessage = '';
+    this.isLoading.set(true);
+    this.loadingMessage.set('Registering new user...');
+    this.errorMessage.set('');
+    this.successMessage.set('');
 
     this.userService.registerUser(this.registerForm.value).subscribe({
       next: (res) => {
         if (res.isSuccess) {
-          this.successMessage = 'User registered successfully! Redirecting...';
-          this.cdr.detectChanges();
+          this.successMessage.set('User registered successfully! Redirecting...');
           setTimeout(() => {
-            this.isLoading = false;
+            this.isLoading.set(false);
             this.router.navigate(['/users']);
           }, 1500);
         } else {
-          this.isLoading = false;
-          this.errorMessage = res.errorMessages?.join(', ') || 'Failed to register user.';
-          this.cdr.detectChanges();
+          this.isLoading.set(false);
+          this.errorMessage.set(res.errorMessages?.join(', ') || 'Failed to register user.');
         }
       },
       error: (err) => {
-        this.isLoading = false;
-        this.errorMessage = err.error?.errorMessages?.join(', ') || 'Connection error. Please try again.';
-        this.cdr.detectChanges();
+        this.isLoading.set(false);
+        this.errorMessage.set(err.error?.errorMessages?.join(', ') || 'Connection error. Please try again.');
       },
     });
   }

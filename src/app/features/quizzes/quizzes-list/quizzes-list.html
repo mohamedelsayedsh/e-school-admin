@@ -13,12 +13,12 @@
       </button>
     </div>
 
-    @if (isLoading) {
+    @if (isLoading()) {
       <app-spinner
         message="Loading quizzes data...">
       </app-spinner>
-    } @else if (errorMessage) {
-      <p class="text-center error-msg py-5">{{ errorMessage }}</p>
+    } @else if (errorMessage()) {
+      <p class="text-center error-msg py-5">{{ errorMessage() }}</p>
     } @else {
       <table class="custom-table">
         <thead>
@@ -37,7 +37,7 @@
               </td>
             </tr>
           } @else {
-            @for (quiz of quizzes; track quiz.id; let i = $index) {
+            @for (quiz of quizzes(); track quiz.id; let i = $index) {
               <tr>
                 <td>{{ (i + 1) < 10 ? '0' + (i + 1) : (i + 1) }}</td>
                 <td>
@@ -75,24 +75,24 @@
 
 </div>
 
-@if (isModalOpen) {
+@if (isModalOpen()) {
   <app-create-quiz
-    (closeModal)="isModalOpen = false"
+    (closeModal)="isModalOpen.set(false)"
     (quizCreated)="fetchQuizzes()">
   </app-create-quiz>
 }
 
-@if (isBuilderModalOpen) {
+@if (isBuilderModalOpen()) {
   <app-quiz-builder
-    [quizId]="selectedQuizId"
-    [nextOrder]="selectedNextOrder"
-    (closeModal)="isBuilderModalOpen = false">
+    [quizId]="selectedQuizId()"
+    [nextOrder]="selectedNextOrder()"
+    (closeModal)="isBuilderModalOpen.set(false)">
   </app-quiz-builder>
 }
 
-@if (isViewModalOpen && selectedViewQuiz) {
+@if (isViewModalOpen() && selectedViewQuiz()) {
   <app-view-quiz
-    [quiz]="selectedViewQuiz"
-    (closeModal)="isViewModalOpen = false">
+    [quiz]="selectedViewQuiz()!"
+    (closeModal)="isViewModalOpen.set(false)">
   </app-view-quiz>
 }

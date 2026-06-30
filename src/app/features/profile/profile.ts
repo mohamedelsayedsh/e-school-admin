@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { Navbar } from '../../shared/navbar/navbar';
@@ -19,27 +19,26 @@ export class Profile implements OnInit {
   private route = inject(ActivatedRoute);
   private userService = inject(UserService);
   private parentStudentService = inject(ParentStudentService);
-  private cdr = inject(ChangeDetectorRef);
 
-  viewedUser: User | null = null;
-  relatedUser: User | null = null;
-  relationLabel = '';
+  viewedUser = signal<User | null>(null);
+  relatedUser = signal<User | null>(null);
+  relationLabel = signal('');
 
-  isParent = false;
-  isStudent = false;
-  isAdmin = false;
+  isParent = signal(false);
+  isStudent = signal(false);
+  isAdmin = signal(false);
 
-  isLoading = true;
-  errorMessage = '';
+  isLoading = signal(true);
+  errorMessage = signal('');
 
-  profileTitle = 'Profile';
+  profileTitle = signal('Profile');
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       const userId = Number(params.get('id'));
       if (!userId) {
-        this.errorMessage = 'Invalid user.';
-        this.isLoading = false;
+        this.errorMessage.set('Invalid user.');
+        this.isLoading.set(false);
         return;
       }
       this.resetState();
@@ -48,14 +47,14 @@ export class Profile implements OnInit {
   }
 
   private resetState() {
-    this.viewedUser = null;
-    this.relatedUser = null;
-    this.relationLabel = '';
-    this.isParent = false;
-    this.isStudent = false;
-    this.isAdmin = false;
-    this.errorMessage = '';
-    this.isLoading = true;
+    this.viewedUser.set(null);
+    this.relatedUser.set(null);
+    this.relationLabel.set('');
+    this.isParent.set(false);
+    this.isStudent.set(false);
+    this.isAdmin.set(false);
+    this.errorMessage.set('');
+    this.isLoading.set(true);
   }
 
   private loadProfile(userId: number) {
@@ -63,28 +62,28 @@ export class Profile implements OnInit {
       next: (response) => {
         if (response.isSuccess) {
           const user = response.result;
-          this.viewedUser = user;
-          this.profileTitle = `${user.userName} — ${user.role?.roleName || 'User'}`;
+          this.viewedUser.set(user);
+          this.profileTitle.set(`${user.userName} — ${user.role?.roleName || 'User'}`);
 
           const roleName = user.role?.roleName?.toLowerCase();
-          this.isParent = roleName === 'parent';
-          this.isStudent = roleName === 'student';
-          this.isAdmin = roleName === 'admin';
+          const isParent = roleName === 'parent';
+          const isStudent = roleName === 'student';
+          this.isParent.set(isParent);
+          this.isStudent.set(isStudent);
+          this.isAdmin.set(roleName === 'admin');
 
-          if (this.isParent || this.isStudent) {
+          if (isParent || isStudent) {
             this.loadRelatedUser(user);
             return;
           }
         } else {
-          this.errorMessage = response.errorMessages?.join(', ') || 'Failed to load this profile.';
+          this.errorMessage.set(response.errorMessages?.join(', ') || 'Failed to load this profile.');
         }
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage = 'Connection error while loading this profile.';
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        this.errorMessage.set('Connection error while loading this profile.');
+        this.isLoading.set(false);
       }
     });
   }
@@ -93,46 +92,40 @@ export class Profile implements OnInit {
     this.parentStudentService.getLinkedParentsStudents().subscribe({
       next: (response) => {
         if (!response.isSuccess || !response.result) {
-          this.isLoading = false;
-          this.cdr.detectChanges();
+          this.isLoading.set(false);
           return;
         }
 
-        if (this.isParent) {
+        if (this.isParent()) {
           const link = response.result.find(l => l.parentId === viewedUser.id);
           if (link?.student) {
-            this.relatedUser = link.student;
-            this.relationLabel = 'Their Child';
+            this.relatedUser.set(link.student);
+            this.relationLabel.set('Their Child');
           }
-          this.isLoading = false;
-          this.cdr.detectChanges();
+          this.isLoading.set(false);
         }
-        else if (this.isStudent) {
+        else if (this.isStudent()) {
           const link = response.result.find(l => l.studentId === viewedUser.id);
           if (link) {
             this.userService.getUserById(link.parentId).subscribe({
               next: (parentResponse) => {
                 if (parentResponse.isSuccess) {
-                  this.relatedUser = parentResponse.result;
-                  this.relationLabel = 'Their Parent';
+                  this.relatedUser.set(parentResponse.result);
+                  this.relationLabel.set('Their Parent');
                 }
-                this.isLoading = false;
-                this.cdr.detectChanges();
+                this.isLoading.set(false);
               },
               error: () => {
-                this.isLoading = false;
-                this.cdr.detectChanges();
+                this.isLoading.set(false);
               }
             });
             return;
           }
-          this.isLoading = false;
-          this.cdr.detectChanges();
+          this.isLoading.set(false);
         }
       },
       error: () => {
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        this.isLoading.set(false);
       }
     });
   }

@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, DestroyRef, inject, input, OnInit, output } from '@angular/core';
+import { Component, DestroyRef, inject, input, OnInit, output, signal } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { QuizService } from '../../../core/services/quiz';
@@ -14,16 +14,15 @@ import { CommonModule } from '@angular/common';
 export class QuizBuilder implements OnInit {
   private formBuilder = inject(FormBuilder);
   private quizService = inject(QuizService);
-  private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject (DestroyRef);
 
   quizId = input.required<number>();
   nextOrder = input.required<number>();
   closeModal = output<void>();
 
-  isLoading = false;
-  successMessage = '';
-  errorMessage = '';
+  isLoading = signal(false);
+  successMessage = signal('');
+  errorMessage = signal('');
 
   questionForm!: FormGroup
   ngOnInit() {
@@ -50,7 +49,6 @@ export class QuizBuilder implements OnInit {
     });
     this.options.push(optionGroup);
     this.updateOptionValues();
-    this.cdr.detectChanges();
   }
   removeOption(index:number){
     if(this.options.length > 2) {
@@ -71,26 +69,24 @@ export class QuizBuilder implements OnInit {
       this.questionForm.markAllAsTouched();
       return;
     }
-    this.isLoading = true;
-    this.errorMessage = '';
-    this.successMessage = '';
+    this.isLoading.set(true);
+    this.errorMessage.set('');
+    this.successMessage.set('');
 
     const sub = this.quizService.addQuestionToQuiz(this.quizId(), this.questionForm.value).subscribe({
       next: (response) => {
-        this.isLoading = false;
+        this.isLoading.set(false);
         if(response.isSuccess){
-          this.successMessage = 'Question added successfully! Add the next one below.';
+          this.successMessage.set('Question added successfully! Add the next one below.');
           const nextOrder = this.questionForm.value.order + 1;
           this.resetForm(nextOrder);
         } else {
-          this.errorMessage = response.errorMessages?.join(', ') || 'Failed to add question.';
+          this.errorMessage.set(response.errorMessages?.join(', ') || 'Failed to add question.');
         }
-        this.cdr.detectChanges();
       },
       error: () => {
-        this.isLoading = false;
-        this.errorMessage = 'Connection error. Question was not saved.'
-        this.cdr.detectChanges();
+        this.isLoading.set(false);
+        this.errorMessage.set('Connection error. Question was not saved.');
       }
     });
     this.destroyRef.onDestroy(() => sub.unsubscribe());

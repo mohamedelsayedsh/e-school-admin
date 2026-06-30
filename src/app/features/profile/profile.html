@@ -1,12 +1,12 @@
 <div class="page-container">
 
-  <app-navbar [pageTitle]="profileTitle"></app-navbar>
+  <app-navbar [pageTitle]="profileTitle()"></app-navbar>
 
-  @if (isLoading) {
+  @if (isLoading()) {
     <app-spinner message="Loading Profile...."></app-spinner>
   }
-  @else if (errorMessage) {
-    <div class="alert-error">{{ errorMessage }}</div>
+  @else if (errorMessage()) {
+    <div class="alert-error">{{ errorMessage() }}</div>
   }
   @else {
 
@@ -15,16 +15,16 @@
       <div class="profile-column">
         <h3 class="column-title">Identity</h3>
         <app-profile-overview
-          [user]="viewedUser"
-          [relatedUser]="relatedUser"
-          [relationLabel]="relationLabel">
+          [user]="viewedUser()"
+          [relatedUser]="relatedUser()"
+          [relationLabel]="relationLabel()">
         </app-profile-overview>
       </div>
 
-      @if (isStudent) {
+      @if (isStudent()) {
         <div class="profile-column">
           <h3 class="column-title">Activity</h3>
-          <app-profile-activity [studentId]="viewedUser!.id"></app-profile-activity>
+          <app-profile-activity [studentId]="viewedUser()!.id"></app-profile-activity>
         </div>
       }
 

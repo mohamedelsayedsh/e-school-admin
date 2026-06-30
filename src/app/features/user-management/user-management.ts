@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { User } from '../../core/models/user';
 import { UserService } from '../../core/services/user';
 import { Navbar } from '../../shared/navbar/navbar';
@@ -15,22 +15,21 @@ import { TableCard } from "../../shared/table-card/table-card";
 })
 export class UserManagement implements OnInit {
   private userService = inject(UserService);
-  private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
   private router = inject(Router);
 
-  users: User[] = [];
-  filteredUsers: User[] = [];
-  isLoading = true;
-  errorMessage = '';
+  users = signal<User[]>([]);
+  filteredUsers = signal<User[]>([]);
+  isLoading = signal(true);
+  errorMessage = signal('');
 
   selectedRoleId: string = '';
   searchTerm: string = '';
 
   // delete flow state
-  userToDelete: User | null = null;
-  isDeleting = false;
-  deleteError = '';
+  userToDelete = signal<User | null>(null);
+  isDeleting = signal(false);
+  deleteError = signal('');
 
   rolesMap: { [key: number]: string } = {
     1: 'Admin',
@@ -44,23 +43,21 @@ export class UserManagement implements OnInit {
   }
 
   fetchUsers() {
-    this.isLoading = true;
+    this.isLoading.set(true);
     this.userService.getAllUsers().subscribe({
       next: (response) => {
         if (response.isSuccess) {
-          this.users = response.result;
-          this.filteredUsers = this.users;
+          this.users.set(response.result);
+          this.filteredUsers.set(response.result);
         } else {
-          this.errorMessage = response.errorMessages.join(', ');
+          this.errorMessage.set(response.errorMessages.join(', '));
         }
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        this.isLoading.set(false);
       },
       error: (err) => {
         console.error(err);
-        this.errorMessage = err.message;
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        this.errorMessage.set(err.message);
+        this.isLoading.set(false);
       }
     });
   }
@@ -76,7 +73,7 @@ export class UserManagement implements OnInit {
   }
 
   private applyFilters() {
-    let result = this.users;
+    let result = this.users();
 
     if (this.selectedRoleId) {
       result = result.filter(u => u.roleID === Number(this.selectedRoleId));
@@ -91,7 +88,7 @@ export class UserManagement implements OnInit {
       );
     }
 
-    this.filteredUsers = result;
+    this.filteredUsers.set(result);
   }
 
   getRoleName(roleId: number): string {
@@ -105,37 +102,36 @@ export class UserManagement implements OnInit {
   // ---- Delete flow ----
 
   openDeleteConfirm(user: User) {
-    this.userToDelete = user;
-    this.deleteError = '';
+    this.userToDelete.set(user);
+    this.deleteError.set('');
   }
 
   cancelDelete() {
-    this.userToDelete = null;
-    this.deleteError = '';
+    this.userToDelete.set(null);
+    this.deleteError.set('');
   }
 
   confirmDelete() {
-    if (!this.userToDelete) return;
+    const toDelete = this.userToDelete();
+    if (!toDelete) return;
 
-    this.isDeleting = true;
-    this.deleteError = '';
+    this.isDeleting.set(true);
+    this.deleteError.set('');
 
-    const sub = this.userService.deleteUser(this.userToDelete.id).subscribe({
+    const sub = this.userService.deleteUser(toDelete.id).subscribe({
       next: (response) => {
         if (response.isSuccess) {
-          this.users = this.users.filter(u => u.id !== this.userToDelete!.id);
+          this.users.set(this.users().filter(u => u.id !== toDelete.id));
           this.applyFilters();
-          this.userToDelete = null;
+          this.userToDelete.set(null);
         } else {
-          this.deleteError = response.errorMessages?.join(', ') || 'Failed to delete user.';
+          this.deleteError.set(response.errorMessages?.join(', ') || 'Failed to delete user.');
         }
-        this.isDeleting = false;
-        this.cdr.detectChanges();
+        this.isDeleting.set(false);
       },
       error: (err) => {
-        this.deleteError = err.error?.errorMessages?.join(', ') || 'Connection error. Please try again.';
-        this.isDeleting = false;
-        this.cdr.detectChanges();
+        this.deleteError.set(err.error?.errorMessages?.join(', ') || 'Connection error. Please try again.');
+        this.isDeleting.set(false);
       }
     });
     this.destroyRef.onDestroy(() => sub.unsubscribe());
