@@ -11,8 +11,8 @@
     <form [formGroup]="actionForm" (ngSubmit)="onSubmit()">
       <div class="modal-body">
 
-        @if (errorMessage) {
-          <div class="alert alert-error">{{ errorMessage }}</div>
+        @if (errorMessage()) {
+          <div class="alert alert-error">{{ errorMessage() }}</div>
         }
 
         <div class="form-group">
@@ -46,8 +46,8 @@
 
       <div class="modal-footer">
         <button type="button" class="btn-cancel" (click)="closeModal.emit()">Cancel</button>
-        <button type="submit" class="btn-primary" [disabled]="actionForm.invalid || isSubmitting">
-          @if (isSubmitting) {
+        <button type="submit" class="btn-primary" [disabled]="actionForm.invalid || isSubmitting()">
+          @if (isSubmitting()) {
             <span class="spinner-sm"></span> Saving...
           } @else {
             Save Changes

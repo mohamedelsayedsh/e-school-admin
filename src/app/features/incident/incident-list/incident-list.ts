@@ -1,13 +1,13 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { IncidentService } from '../../../core/services/incident';
-import { UserService } from '../../../core/services/user'; // <-- Add your UserService import
-import { Router } from '@angular/router';
+import { UserService } from '../../../core/services/user';
 import { Incident } from '../../../core/models/incident';
 import { CommonModule, DatePipe } from '@angular/common';
 import { Navbar } from '../../../shared/navbar/navbar';
 import { TableCard } from '../../../shared/table-card/table-card';
 import { IncidentImage } from "../incident-image/incident-image";
 import { Spinner } from '../../../shared/spinner/spinner';
+
 @Component({
   selector: 'app-incident-list',
   imports: [CommonModule, Navbar, TableCard, DatePipe, IncidentImage, Spinner],
@@ -17,23 +17,23 @@ import { Spinner } from '../../../shared/spinner/spinner';
 export class IncidentList implements OnInit {
   private incidentService = inject(IncidentService);
   private userService = inject(UserService);
-  private router = inject(Router);
-  private cdr = inject(ChangeDetectorRef);
 
-  incidents: Incident[] = [];
+  incidents = signal<Incident[]>([]);
   userMap = new Map<number, string>();
-  isLoading = true;
-  errorMessage = '';
+  isLoading = signal(true);
+  errorMessage = signal('');
 
-  isImageModalOpen = false;
-  selectedImageUrl = '';
+  isImageModalOpen = signal(false);
+  selectedImageUrl = signal('');
 
   ngOnInit() {
     this.fetchData();
   }
+
   fetchData() {
     this.userService.getAllUsers().subscribe({
       next: (res: any) => {
+        console.log(res);
         if (res.isSuccess && res.result) {
           res.result.forEach((user: any) => {
             this.userMap.set(user.id, user.userName);
@@ -48,37 +48,44 @@ export class IncidentList implements OnInit {
     });
   }
 
-  fetchIncidents() {
+ fetchIncidents() {
     this.incidentService.getAllIncidents().subscribe({
       next: (res: any) => {
-        if (res.isSuccess && res.result) {
-          this.incidents = res.result;
+        // Add this log so you can see exactly what the Incident API returns
+        console.log('Incident API Response:', res);
+
+        // Make the parsing more flexible, exactly like we did in the Dashboard
+        const incidentsData = res.result || res.data || (Array.isArray(res) ? res : []);
+
+        if (incidentsData && incidentsData.length > 0) {
+          this.incidents.set(incidentsData);
         } else {
-          this.errorMessage = res.errorMessages?.join(', ') || 'Failed to load incidents.';
+          // If the array is genuinely empty, this will display the "No incidents" message
+          this.incidents.set([]);
         }
-        this.isLoading = false;
-        this.cdr.detectChanges();
+
+        this.isLoading.set(false);
       },
       error: (err) => {
         console.error('Error fetching incidents:', err);
-        this.errorMessage = 'Connection error. Please try again.';
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        this.errorMessage.set('Connection error. Please try again.');
+        this.isLoading.set(false);
       }
     });
   }
+
   getStudentName(studentId: number): string {
     return this.userMap.get(studentId) || `Student #${studentId}`;
   }
 
   openImageModal(imageUrl: string) {
-    this.selectedImageUrl = imageUrl;
-    this.isImageModalOpen = true;
+    this.selectedImageUrl.set(imageUrl);
+    this.isImageModalOpen.set(true);
   }
 
   closeImageModal() {
-    this.isImageModalOpen = false;
-    this.selectedImageUrl = '';
+    this.isImageModalOpen.set(false);
+    this.selectedImageUrl.set('');
   }
 
   getEmotionClass(emotion: string): string {

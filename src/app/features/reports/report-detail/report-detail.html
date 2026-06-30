@@ -2,11 +2,11 @@
 
   <app-navbar pageTitle="Report Deep Dive"></app-navbar>
 
-  @if (isLoading) {
+  @if (isLoading()) {
     <app-spinner message="Loading report details..."></app-spinner>
-  } @else if (errorMessage) {
-    <div class="alert alert-error">{{ errorMessage }}</div>
-  } @else if (report) {
+  } @else if (errorMessage()) {
+    <div class="alert alert-error">{{ errorMessage() }}</div>
+  } @else if (report()) {
 
     <app-back-button routePath="/reports"></app-back-button>
 
@@ -14,43 +14,43 @@
     <div class="metrics-row">
       <div class="metric-card">
         <span class="metric-label">Total Images Analyzed</span>
-        <span class="metric-value">{{ report.totalImages | number }}</span>
+        <span class="metric-value">{{ report()!.totalImages | number }}</span>
       </div>
       <div class="metric-card">
         <span class="metric-label">AI Confidence Score</span>
-        <span class="metric-value text-success">{{ (report.avgConfidence * 100).toFixed(1) }}%</span>
+        <span class="metric-value text-success">{{ (report()!.avgConfidence * 100).toFixed(1) }}%</span>
       </div>
       <div class="metric-card">
         <span class="metric-label">Current Risk Level</span>
         <span class="metric-value">
           <span class="risk-pill" [ngClass]="{
-            'risk-high':   report.riskLevel === 'High',
-            'risk-medium': report.riskLevel === 'Medium',
-            'risk-low':    report.riskLevel === 'Low'
+            'risk-high':   report()!.riskLevel === 'High',
+            'risk-medium': report()!.riskLevel === 'Medium',
+            'risk-low':    report()!.riskLevel === 'Low'
           }">
-            {{ report.riskLevel | uppercase }}
-            @if (report.riskLevel === 'High') { <i class="bi bi-exclamation-circle-fill"></i> }
+            {{ report()!.riskLevel | uppercase }}
+            @if (report()!.riskLevel === 'High') { <i class="bi bi-exclamation-circle-fill"></i> }
           </span>
         </span>
       </div>
 
       <!-- Student card -->
-      <div class="metric-card student-card" (click)="goToStudent()" [class.student-card-clickable]="student">
+      <div class="metric-card student-card" (click)="goToStudent()" [class.student-card-clickable]="student()">
         <span class="metric-label">Student</span>
-        @if (student) {
+        @if (student()) {
           <img
             class="student-avatar"
-            [src]="'https://ui-avatars.com/api/?name=' + student.userName + '&background=2563eb&color=fff&size=96'"
-            [alt]="student.userName">
-          <span class="student-name">{{ student.userName }}</span>
-          <span class="student-role">{{ student.className || student.role?.roleName || 'Student' }}</span>
+            [src]="'https://ui-avatars.com/api/?name=' + student()!.userName + '&background=2563eb&color=fff&size=96'"
+            [alt]="student()!.userName">
+          <span class="student-name">{{ student()!.userName }}</span>
+          <span class="student-role">{{ student()!.className || student()!.role?.roleName || 'Student' }}</span>
           <span class="student-link">
             <i class="bi bi-box-arrow-up-right"></i> View Profile
           </span>
         } @else {
           <div class="student-placeholder">
             <i class="bi bi-person-circle"></i>
-            <span>Student #{{ report.studentId }}</span>
+            <span>Student #{{ report()!.studentId }}</span>
           </div>
         }
       </div>
@@ -70,37 +70,37 @@
           <div class="behavior-item">
             <div class="behavior-meta">
               <span class="behavior-name">Hand Raised</span>
-              <span class="behavior-count">{{ report.handRaisedCount }}</span>
+              <span class="behavior-count">{{ report()!.handRaisedCount }}</span>
             </div>
             <div class="progress-bar-track">
-              <div class="progress-bar-fill fill-primary" [style.width.%]="getPercent(report.handRaisedCount)"></div>
+              <div class="progress-bar-fill fill-primary" [style.width.%]="getPercent(report()!.handRaisedCount)"></div>
             </div>
           </div>
           <div class="behavior-item">
             <div class="behavior-meta">
               <span class="behavior-name">Writing</span>
-              <span class="behavior-count">{{ report.writtingCount }}</span>
+              <span class="behavior-count">{{ report()!.writtingCount }}</span>
             </div>
             <div class="progress-bar-track">
-              <div class="progress-bar-fill fill-primary" [style.width.%]="getPercent(report.writtingCount)"></div>
+              <div class="progress-bar-fill fill-primary" [style.width.%]="getPercent(report()!.writtingCount)"></div>
             </div>
           </div>
           <div class="behavior-item">
             <div class="behavior-meta">
               <span class="behavior-name">Reading</span>
-              <span class="behavior-count">{{ report.readingCount }}</span>
+              <span class="behavior-count">{{ report()!.readingCount }}</span>
             </div>
             <div class="progress-bar-track">
-              <div class="progress-bar-fill fill-primary" [style.width.%]="getPercent(report.readingCount)"></div>
+              <div class="progress-bar-fill fill-primary" [style.width.%]="getPercent(report()!.readingCount)"></div>
             </div>
           </div>
           <div class="behavior-item">
             <div class="behavior-meta">
               <span class="behavior-name">Looking Forward</span>
-              <span class="behavior-count">{{ report.lookingForwardCount }}</span>
+              <span class="behavior-count">{{ report()!.lookingForwardCount }}</span>
             </div>
             <div class="progress-bar-track">
-              <div class="progress-bar-fill fill-primary" [style.width.%]="getPercent(report.lookingForwardCount)"></div>
+              <div class="progress-bar-fill fill-primary" [style.width.%]="getPercent(report()!.lookingForwardCount)"></div>
             </div>
           </div>
         </div>
@@ -117,28 +117,28 @@
           <div class="behavior-item">
             <div class="behavior-meta">
               <span class="behavior-name">Sleeping</span>
-              <span class="behavior-count danger-count">{{ report.sleepingCount }}</span>
+              <span class="behavior-count danger-count">{{ report()!.sleepingCount }}</span>
             </div>
             <div class="progress-bar-track">
-              <div class="progress-bar-fill fill-danger" [style.width.%]="getPercent(report.sleepingCount)"></div>
+              <div class="progress-bar-fill fill-danger" [style.width.%]="getPercent(report()!.sleepingCount)"></div>
             </div>
           </div>
           <div class="behavior-item">
             <div class="behavior-meta">
               <span class="behavior-name">Looking Back</span>
-              <span class="behavior-count danger-count">{{ report.lookingBackCount }}</span>
+              <span class="behavior-count danger-count">{{ report()!.lookingBackCount }}</span>
             </div>
             <div class="progress-bar-track">
-              <div class="progress-bar-fill fill-danger" [style.width.%]="getPercent(report.lookingBackCount)"></div>
+              <div class="progress-bar-fill fill-danger" [style.width.%]="getPercent(report()!.lookingBackCount)"></div>
             </div>
           </div>
           <div class="behavior-item">
             <div class="behavior-meta">
               <span class="behavior-name">Standing</span>
-              <span class="behavior-count danger-count">{{ report.standingCount }}</span>
+              <span class="behavior-count danger-count">{{ report()!.standingCount }}</span>
             </div>
             <div class="progress-bar-track">
-              <div class="progress-bar-fill fill-danger" [style.width.%]="getPercent(report.standingCount)"></div>
+              <div class="progress-bar-fill fill-danger" [style.width.%]="getPercent(report()!.standingCount)"></div>
             </div>
           </div>
         </div>
@@ -153,36 +153,36 @@
       <div class="review-meta-row">
         <div class="review-meta-item">
           <p class="review-meta-label">Assigned Risk</p>
-          <p class="review-meta-value">{{ report.riskLevel }}</p>
+          <p class="review-meta-value">{{ report()!.riskLevel }}</p>
         </div>
         <div class="review-meta-item">
           <p class="review-meta-label">Report Status</p>
-          <p class="review-meta-value">{{ report.status }}</p>
+          <p class="review-meta-value">{{ report()!.status }}</p>
         </div>
         <div class="review-meta-item">
           <p class="review-meta-label">Week</p>
-          <p class="review-meta-value">Week {{ report.weekNumber }}</p>
+          <p class="review-meta-value">Week {{ report()!.weekNumber }}</p>
         </div>
       </div>
 
       <div class="recommendation-block">
         <p class="review-meta-label">AI Recommendation</p>
         <div class="recommendation-text">
-          <p>{{ report.recomendation }}</p>
+          <p>{{ report()!.recomendation }}</p>
         </div>
       </div>
 
       <div class="review-actions">
         <button class="btn-cancel" (click)="goBack()">OK</button>
-        <button class="btn-primary" (click)="isEditModalOpen = true">
+        <button class="btn-primary" (click)="isEditModalOpen.set(true)">
           <i class="bi bi-pencil-square"></i> Edit Actions
         </button>
       </div>
 
-      @if (isEditModalOpen) {
+      @if (isEditModalOpen()) {
         <app-action-edit
-          [report]="report"
-          (closeModal)="isEditModalOpen = false"
+          [report]="report()!"
+          (closeModal)="isEditModalOpen.set(false)"
           (reportUpdated)="fetchReportDetails()">
         </app-action-edit>
       }

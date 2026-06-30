@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ReportService } from '../../../core/services/report';
 import { ReportInterface } from '../../../core/models/report';
@@ -21,13 +21,12 @@ export class ReportDetail implements OnInit {
   private router = inject(Router);
   private reportService = inject(ReportService);
   private userService = inject(UserService);
-  private cdr = inject(ChangeDetectorRef);
 
-  report: ReportInterface | null = null;
-  student: User | null = null;
-  isLoading = true;
-  errorMessage = '';
-  isEditModalOpen = false;
+  report = signal<ReportInterface | null>(null);
+  student = signal<User | null>(null);
+  isLoading = signal(true);
+  errorMessage = signal('');
+  isEditModalOpen = signal(false);
 
   private maxBehaviorCount = 1;
 
@@ -36,45 +35,44 @@ export class ReportDetail implements OnInit {
   }
 
   fetchReportDetails() {
-    this.isLoading = true;
-    this.errorMessage = '';
-    this.student = null;
+    this.isLoading.set(true);
+    this.errorMessage.set('');
+    this.student.set(null);
     const id = Number(this.route.snapshot.paramMap.get('id'));
 
     if (!id) {
-      this.errorMessage = 'Invalid report ID.';
-      this.isLoading = false;
-      this.cdr.detectChanges();
+      this.errorMessage.set('Invalid report ID.');
+      this.isLoading.set(false);
       return;
     }
 
     this.reportService.getReportById(id).subscribe({
       next: (res: any) => {
         if (res.isSuccess && res.result) {
+          let reportData: ReportInterface | null;
           if (Array.isArray(res.result)) {
-            this.report = res.result.length > 0 ? res.result[0] : null;
+            reportData = res.result.length > 0 ? res.result[0] : null;
           } else {
-            this.report = res.result;
+            reportData = res.result;
           }
+          this.report.set(reportData);
 
-          if (this.report) {
-            this.calculateMax();
-            this.fetchStudent(this.report.studentId);
+          if (reportData) {
+            this.calculateMax(reportData);
+            this.fetchStudent(reportData.studentId);
           } else {
-            this.errorMessage = 'Report not found.';
-            this.isLoading = false;
+            this.errorMessage.set('Report not found.');
+            this.isLoading.set(false);
           }
         } else {
-          this.errorMessage = res.errorMessages?.join(', ') || 'Failed to load report.';
-          this.isLoading = false;
+          this.errorMessage.set(res.errorMessages?.join(', ') || 'Failed to load report.');
+          this.isLoading.set(false);
         }
-        this.cdr.detectChanges();
       },
       error: (err) => {
         console.error('Report detail error:', err);
-        this.errorMessage = 'Connection error. Please try again.';
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        this.errorMessage.set('Connection error. Please try again.');
+        this.isLoading.set(false);
       }
     });
   }
@@ -83,28 +81,25 @@ export class ReportDetail implements OnInit {
     this.userService.getUserById(studentId).subscribe({
       next: (res: any) => {
         if (res.isSuccess && res.result) {
-          this.student = res.result;
+          this.student.set(res.result);
         }
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        this.isLoading.set(false);
       },
       error: () => {
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        this.isLoading.set(false);
       }
     });
   }
 
-  private calculateMax() {
-    if (!this.report) return;
+  private calculateMax(report: ReportInterface) {
     this.maxBehaviorCount = Math.max(
-      this.report.handRaisedCount,
-      this.report.writtingCount,
-      this.report.readingCount,
-      this.report.lookingForwardCount,
-      this.report.sleepingCount,
-      this.report.lookingBackCount,
-      this.report.standingCount,
+      report.handRaisedCount,
+      report.writtingCount,
+      report.readingCount,
+      report.lookingForwardCount,
+      report.sleepingCount,
+      report.lookingBackCount,
+      report.standingCount,
       1
     );
   }
@@ -114,8 +109,9 @@ export class ReportDetail implements OnInit {
   }
 
   goToStudent() {
-    if (this.student) {
-      this.router.navigate(['/users', this.student.id]);
+    const s = this.student();
+    if (s) {
+      this.router.navigate(['/users', s.id]);
     }
   }
 

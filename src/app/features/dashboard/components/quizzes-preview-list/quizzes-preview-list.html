@@ -1,0 +1,22 @@
+<div class="table-card list-card">
+      <div class="list-card-header">
+        <h5 class="card-title">Quizzes</h5>
+        <a routerLink="/quizzes" class="view-all">View Quizzes →</a>
+      </div>
+      <ul class="scroll-list">
+        @for (quiz of quizzes(); track quiz.id) {
+          <li class="list-row">
+            <div class="row-left">
+              <span class="avatar-circle"><i class="bi bi-clipboard-check"></i></span>
+              <div>
+                <p class="row-title">{{ quiz.title }}</p>
+                <span class="row-sub">{{ quiz.description }}</span>
+              </div>
+            </div>
+            <span class="text-muted">{{ quiz.questionCount }} questions</span>
+          </li>
+        } @empty {
+          <p class="empty-text">No quizzes created yet.</p>
+        }
+      </ul>
+    </div>

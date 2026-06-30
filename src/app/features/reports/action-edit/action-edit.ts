@@ -1,11 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, input, OnInit, output } from '@angular/core';
+import { Component, inject, input, OnInit, output, signal } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ReportService } from '../../../core/services/report';
 import { ReportInterface } from '../../../core/models/report';
 
 @Component({
   selector: 'app-action-edit',
+  standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './action-edit.html',
   styleUrl: './action-edit.css',
@@ -19,42 +20,43 @@ export class ActionEdit implements OnInit {
   reportUpdated = output<void>();
 
   actionForm!: FormGroup;
-  isSubmitting = false;
-  errorMessage = '';
+
+  isSubmitting = signal<boolean>(false);
+  errorMessage = signal<string>('');
 
   ngOnInit() {
     this.actionForm = this.fb.group({
-      riskLevel:     [this.report().riskLevel,    Validators.required],
+      riskLevel:     [this.report().riskLevel,     Validators.required],
       status:        [this.report().status,        Validators.required],
-      // form field matches model spelling; we remap on submit for the API
       recomendation: [this.report().recomendation, Validators.required],
     });
   }
 
   onSubmit() {
-    if (this.actionForm.invalid) return;
-    this.isSubmitting = true;
-    this.errorMessage = '';
+    if (this.actionForm.invalid || this.isSubmitting()) return;
+
+    this.isSubmitting.set(true);
+    this.errorMessage.set('');
 
     const { riskLevel, status, recomendation } = this.actionForm.value;
 
     this.reportService.updateReportAction(this.report().id, {
       riskLevel,
       status,
-      recomendations: recomendation, // API uses plural spelling
+      recomendations: recomendation,
     }).subscribe({
       next: (res) => {
         if (res.isSuccess) {
           this.reportUpdated.emit();
           this.closeModal.emit();
         } else {
-          this.errorMessage = res.errorMessages?.join(', ') || 'Failed to update report.';
+          this.errorMessage.set(res.errorMessages?.join(', ') || 'Failed to update report.');
         }
-        this.isSubmitting = false;
+        this.isSubmitting.set(false);
       },
       error: () => {
-        this.errorMessage = 'Connection error. Please try again.';
-        this.isSubmitting = false;
+        this.errorMessage.set('Connection error. Please try again.');
+        this.isSubmitting.set(false);
       }
     });
   }

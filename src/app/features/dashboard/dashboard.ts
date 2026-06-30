@@ -2,21 +2,51 @@ import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
+
+// Services
 import { UserService } from '../../core/services/user';
 import { IncidentService } from '../../core/services/incident';
 import { QuizService } from '../../core/services/quiz';
 import { ReportService } from '../../core/services/report';
+
+// Models
 import { User } from '../../core/models/user';
 import { Incident } from '../../core/models/incident';
 import { Quiz, QuizAnalysis } from '../../core/models/quiz';
 import { ReportInterface } from '../../core/models/report';
+
+// Shared
 import { Navbar } from "../../shared/navbar/navbar";
+import { StatCard } from './components/stat-card/stat-card';
+import { IncidentsTrendChart } from './components/incidents-trend-chart/incidents-trend-chart';
+import { RiskDistributionChart } from './components/risk-distribution-chart/risk-distribution-chart';
+import { RecentIncidentsList } from './components/recent-incidents-list/recent-incidents-list';
+import { TopHighRiskStudents } from './components/top-high-risk-students/top-high-risk-students';
+import { AiSchoolHealthCard } from './components/ai-school-health-card/ai-school-health-card';
+import { QuickActions } from './components/quick-actions/quick-actions';
+import { RecentReportsList } from './components/recent-reports-list/recent-reports-list';
 import { Spinner } from "../../shared/spinner/spinner";
+import { QuizzesPreviewList } from './components/quizzes-preview-list/quizzes-preview-list';
+
+// Separated Dashboard Components
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule, RouterLink, Navbar, Spinner],
+  imports: [
+    CommonModule,
+    Navbar,
+    StatCard,
+    IncidentsTrendChart,
+    RiskDistributionChart,
+    RecentIncidentsList,
+    RecentReportsList,
+    TopHighRiskStudents,
+    QuizzesPreviewList,
+    AiSchoolHealthCard,
+    QuickActions,
+    Spinner
+],
   templateUrl: './dashboard.html',
   styleUrl: './dashboard.css',
 })

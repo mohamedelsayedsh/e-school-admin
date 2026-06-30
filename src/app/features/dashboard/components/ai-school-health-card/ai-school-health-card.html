@@ -1,0 +1,29 @@
+<div class="table-card health-card">
+      <h5 class="card-title">AI School Health</h5>
+
+      <div class="health-ring-wrap">
+        <div class="health-ring"
+            [style.background]="'conic-gradient(#22c55e ' + overallHealth() + '%, #e5e7eb ' + overallHealth() + '%)'">
+          <div class="health-ring-inner">{{ overallHealth() }}%</div>
+        </div>
+        <div>
+          <p class="health-label">Overall School Health</p>
+          <p class="health-status">{{ healthLabel() }}</p>
+        </div>
+      </div>
+
+      <div class="health-stats">
+        <div class="health-stat-row">
+          <span><i class="bi bi-emoji-smile"></i> Average Emotion</span>
+          <strong>{{ averageEmotion() }}</strong>
+        </div>
+        <div class="health-stat-row">
+          <span><i class="bi bi-pencil"></i> Most Detected Behavior</span>
+          <strong>{{ mostDetectedBehavior() }}</strong>
+        </div>
+        <div class="health-stat-row">
+          <span><i class="bi bi-people"></i> Students Needing Attention</span>
+          <strong>{{ studentsNeedingAttention() }}</strong>
+        </div>
+      </div>
+    </div>

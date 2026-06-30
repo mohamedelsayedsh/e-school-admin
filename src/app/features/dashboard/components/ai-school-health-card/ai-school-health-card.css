@@ -1,0 +1,25 @@
+.health-card { padding: 20px; background: #f0fdf4; border-radius: 12px; }
+    .card-title { font-size: 1rem; font-weight: 600; margin: 0 0 16px 0; color: #1e293b; }
+    .health-ring-wrap { display: flex; align-items: center; gap: 16px; margin-bottom: 18px; }
+    .health-ring {
+      width: 80px; height: 80px;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .health-ring-inner {
+      width: 60px; height: 60px;
+      border-radius: 50%;
+      background: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 1.1rem; color: #22c55e;
+    }
+    .health-label { margin: 0; font-size: 0.85rem; color: #64748b; }
+    .health-status { margin: 2px 0 0 0; font-weight: 700; color: #16a34a; }
+
+    .health-stats { display: flex; flex-direction: column; gap: 12px; }
+    .health-stat-row {
+      display: flex; justify-content: space-between; align-items: center;
+      font-size: 0.85rem; color: #1e293b;
+      background: #fff; padding: 10px 12px; border-radius: 10px;
+    }
+    .health-stat-row i { margin-right: 6px; color: #22c55e; }

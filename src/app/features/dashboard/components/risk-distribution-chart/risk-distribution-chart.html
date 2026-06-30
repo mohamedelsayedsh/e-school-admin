@@ -1,0 +1,22 @@
+<div class="table-card chart-card">
+      <h5 class="card-title">Risk Level Distribution</h5>
+      <div class="donut-row">
+        <div class="donut" [style.background]="gradient()">
+          <div class="donut-hole"></div>
+        </div>
+        <div class="donut-legend">
+          <div class="legend-item">
+            <span class="dot dot-high"></span> High Risk
+            <strong>{{ distribution().high.pct }}% ({{ distribution().high.count }})</strong>
+          </div>
+          <div class="legend-item">
+            <span class="dot dot-medium"></span> Medium Risk
+            <strong>{{ distribution().medium.pct }}% ({{ distribution().medium.count }})</strong>
+          </div>
+          <div class="legend-item">
+            <span class="dot dot-low"></span> Low Risk
+            <strong>{{ distribution().low.pct }}% ({{ distribution().low.count }})</strong>
+          </div>
+        </div>
+      </div>
+    </div>

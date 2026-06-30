@@ -1,5 +1,5 @@
 import { ReportService } from './../../../core/services/report';
-import { ChangeDetectorRef, Component, DestroyRef, inject, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, OnInit, signal } from '@angular/core';
 import { Navbar } from '../../../shared/navbar/navbar';
 import { Router } from '@angular/router';
 import { CommonModule, NgClass } from '@angular/common';
@@ -19,22 +19,21 @@ export class ReportsList implements OnInit {
   private reportService = inject(ReportService);
   private userService = inject(UserService);
   private router = inject(Router);
-  private cdr = inject(ChangeDetectorRef);
   private destroyRef = inject(DestroyRef);
 
-  reports: ReportInterface[] = [];
-  filteredReports: ReportInterface[] = [];
+  reports = signal<ReportInterface[]>([]);
+  filteredReports = signal<ReportInterface[]>([]);
   studentNames: Map<number, string> = new Map();
 
-  isLoading = true;
-  errorMessage = '';
+  isLoading = signal(true);
+  errorMessage = signal('');
 
   filterWeek = '';
   filterRisk = '';
   filterStatus = '';
 
   get availableWeeks(): number[] {
-    return [...new Set(this.reports.map(r => r.weekNumber))].sort((a, b) => a - b);
+    return [...new Set(this.reports().map(r => r.weekNumber))].sort((a, b) => a - b);
   }
 
   ngOnInit() {
@@ -42,49 +41,46 @@ export class ReportsList implements OnInit {
   }
 
   fetchReports() {
-    this.isLoading = true;
+    this.isLoading.set(true);
     const sub = this.reportService.getAllReports().subscribe({
       next: (response) => {
         if (response.isSuccess && response.result) {
-          this.reports = response.result;
-          this.filteredReports = this.reports;
+          this.reports.set(response.result);
+          this.filteredReports.set(response.result);
           this.loadStudentNames();
         } else {
-          this.errorMessage = 'Failed to load reports.';
+          this.errorMessage.set('Failed to load reports.');
         }
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        this.isLoading.set(false);
       },
       error: () => {
-        this.errorMessage = 'Connection error. Please try again later.';
-        this.isLoading = false;
-        this.cdr.detectChanges();
+        this.errorMessage.set('Connection error. Please try again later.');
+        this.isLoading.set(false);
       }
     });
     this.destroyRef.onDestroy(() => sub.unsubscribe());
   }
 
   private loadStudentNames() {
-      const sub = this.userService.getAllUsers().subscribe({
-        next: (res) => {
-          if (res.isSuccess && res.result) {
-            res.result.forEach(user => this.studentNames.set(user.id, user.userName));
-          }
-          this.cdr.detectChanges();
-        },
-        error: () => {
-          this.cdr.detectChanges();
+    const sub = this.userService.getAllUsers().subscribe({
+      next: (res) => {
+        if (res.isSuccess && res.result) {
+          res.result.forEach(user => this.studentNames.set(user.id, user.userName));
         }
-      });
-      this.destroyRef.onDestroy(() => sub.unsubscribe());
-    }
+      },
+      error: () => {
+        // Name lookup failure is non-critical — reports still render with fallback names
+      }
+    });
+    this.destroyRef.onDestroy(() => sub.unsubscribe());
+  }
 
-    getStudentName(studentId: number): string {
-      return this.studentNames.get(studentId) ?? `Student #${studentId}`;
-    }
+  getStudentName(studentId: number): string {
+    return this.studentNames.get(studentId) ?? `Student #${studentId}`;
+  }
 
   applyFilters() {
-    let result = this.reports;
+    let result = this.reports();
 
     if (this.filterWeek) {
       result = result.filter(r => r.weekNumber === Number(this.filterWeek));
@@ -96,7 +92,7 @@ export class ReportsList implements OnInit {
       result = result.filter(r => r.status === this.filterStatus);
     }
 
-    this.filteredReports = result;
+    this.filteredReports.set(result);
   }
 
   viewReportDetails(reportId: number) {

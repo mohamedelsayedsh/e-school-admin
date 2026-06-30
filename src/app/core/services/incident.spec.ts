@@ -1,6 +1,7 @@
 import { TestBed } from '@angular/core/testing';
 
 import { IncidentService } from './incident';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 describe('Incident', () => {
   let service: IncidentService;

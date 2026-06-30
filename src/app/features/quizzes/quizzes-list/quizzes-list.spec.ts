@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { QuizzesList } from './quizzes-list';
 
 describe('QuizzesList', () => {

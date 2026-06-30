@@ -1,0 +1,25 @@
+<div class="table-card list-card">
+      <div class="list-card-header">
+        <h5 class="card-title">Recent Reports</h5>
+        <a routerLink="/reports" class="view-all">View All →</a>
+      </div>
+      <ul class="scroll-list">
+        @for (report of reports(); track report.id) {
+          <li class="list-row">
+            <div class="row-left">
+              <span class="avatar-circle">{{ report.studentName.slice(0, 2).toUpperCase() }}</span>
+              <div>
+                <p class="row-title">{{ report.studentName }}</p>
+                <span class="row-sub">Week {{ report.weekNumber }}</span>
+              </div>
+            </div>
+            <div class="row-right">
+              <span class="badge" [ngClass]="riskBadgeClass(report.riskLevel)">{{ report.riskLevel }}</span>
+              <span class="status-text">{{ report.status }}</span>
+            </div>
+          </li>
+        } @empty {
+          <p class="empty-text">No reports yet.</p>
+        }
+      </ul>
+    </div>

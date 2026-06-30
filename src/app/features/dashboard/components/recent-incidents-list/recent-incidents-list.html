@@ -1,0 +1,25 @@
+<div class="table-card list-card">
+      <div class="list-card-header">
+        <h5 class="card-title">Recent Incidents</h5>
+        <a routerLink="/incidents" class="view-all">View All →</a>
+      </div>
+
+      <ul class="scroll-list">
+        @for (incident of incidents(); track incident.analysisId) {
+          <li class="list-row">
+            <div class="row-left">
+              <span class="avatar-circle">{{ incident.studentName.slice(0, 2).toUpperCase() }}</span>
+              <div>
+                <p class="row-title">{{ incident.studentName }}</p>
+                <span class="row-sub">{{ incident.behavior }}</span>
+              </div>
+            </div>
+            <span class="badge" [ngClass]="incident.behaviorConfidence > 0.7 ? 'badge-high' : 'badge-medium'">
+              {{ (incident.behaviorConfidence * 100).toFixed(0) }}%
+            </span>
+          </li>
+        } @empty {
+          <p class="empty-text">No incidents yet.</p>
+        }
+      </ul>
+    </div>

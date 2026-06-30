@@ -1,0 +1,29 @@
+<div class="table-card list-card">
+      <div class="list-card-header">
+        <h5 class="card-title">Top High-Risk Students</h5>
+        <a routerLink="/users" class="view-all">View All →</a>
+      </div>
+      <ul class="scroll-list">
+        @for (student of students(); track student.studentId) {
+          <li class="list-row">
+            <div class="row-left">
+              <span class="avatar-circle">{{ student.studentName.slice(0, 2).toUpperCase() }}</span>
+              <div class="risk-bar-block">
+                <p class="row-title">{{ student.studentName }}</p>
+                <span class="row-sub">Risk Score: {{ student.scorePct }}%</span>
+                <div class="progress-bar-track">
+                  <div
+                    class="progress-bar-fill"
+                    [ngClass]="riskBadgeClass(student.level) + '-fill'"
+                    [style.width.%]="student.scorePct">
+                  </div>
+                </div>
+              </div>
+            </div>
+            <span class="badge" [ngClass]="riskBadgeClass(student.level)">{{ student.level }}</span>
+          </li>
+        } @empty {
+          <p class="empty-text">No quiz data yet.</p>
+        }
+      </ul>
+    </div>

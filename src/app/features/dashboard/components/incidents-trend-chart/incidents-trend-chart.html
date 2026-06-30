@@ -1,0 +1,14 @@
+<div class="table-card chart-card">
+      <h5 class="card-title">Incidents Trend (This Week)</h5>
+      <svg viewBox="0 0 600 160" class="trend-svg">
+        <polyline [attr.points]="trendLinePoints()" class="trend-line" />
+        @for (dot of trendDots(); track $index) {
+          <circle [attr.cx]="dot.x" [attr.cy]="dot.y" r="4" class="trend-dot" />
+        }
+      </svg>
+      <div class="trend-labels">
+        @for (day of weekDays(); track day) {
+          <span>{{ day }}</span>
+        }
+      </div>
+    </div>

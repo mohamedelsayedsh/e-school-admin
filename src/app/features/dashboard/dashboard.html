@@ -1,247 +1,72 @@
 <div class="page-container">
-
   <app-navbar pageTitle="Dashboard"></app-navbar>
-  @if (isLoading()) {
-    <app-spinner>Loading dashboard...</app-spinner>
-  } @else {
 
+  @if (isLoading()) {
+    <app-spinner class="loading-text">Loading dashboard...</app-spinner>
+  } @else {
     <div class="dashboard-grid">
 
-      <!-- MAIN COLUMN -->
       <div class="main-column">
 
-      <!-- Stat cards: now 3, not 4 -->
-      <div class="stat-cards-row">
-        <div class="table-card stat-card">
-          <div class="stat-icon icon-blue"><i class="bi bi-people-fill"></i></div>
-          <div>
-            <span class="stat-label">Total Students</span>
-            <span class="stat-value">{{ totalStudents() }}</span>
-          </div>
+        <div class="stat-cards-row">
+          <app-stat-card
+            icon="bi-people-fill"
+            color="blue"
+            label="Total Students"
+            [value]="totalStudents()">
+          </app-stat-card>
+
+          <app-stat-card
+            icon="bi-shield-exclamation"
+            color="red"
+            label="Incidents (This Week)"
+            [value]="incidentsThisWeek()">
+          </app-stat-card>
+
+          <app-stat-card
+            icon="bi-file-earmark-text"
+            color="green"
+            label="Reports"
+            [value]="totalReports()"
+            [subLabel]="pendingReports() + ' Pending'"
+            subClass="pending">
+          </app-stat-card>
         </div>
 
-        <div class="table-card stat-card">
-          <div class="stat-icon icon-red"><i class="bi bi-shield-exclamation"></i></div>
-          <div>
-            <span class="stat-label">Incidents (This Week)</span>
-            <span class="stat-value">{{ incidentsThisWeek() }}</span>
-          </div>
-        </div>
-
-        <div class="table-card stat-card">
-          <div class="stat-icon icon-green"><i class="bi bi-file-earmark-text"></i></div>
-          <div>
-            <span class="stat-label">Reports</span>
-            <span class="stat-value">{{ totalReports() }}</span>
-            <span class="stat-sub pending">{{ pendingReports() }} Pending</span>
-          </div>
-        </div>
-      </div>
-
-        <!-- Charts row -->
         <div class="charts-row">
-          <div class="table-card chart-card">
-            <h5 class="card-title">Incidents Trend (This Week)</h5>
-            <svg viewBox="0 0 600 160" class="trend-svg">
-              <polyline [attr.points]="trendLinePoints()" class="trend-line" />
-              @for (dot of trendDots(); track $index) {
-                <circle [attr.cx]="dot.x" [attr.cy]="dot.y" r="4" class="trend-dot" />
-              }
-            </svg>
-            <div class="trend-labels">
-              @for (day of weekDays; track day) {
-                <span>{{ day }}</span>
-              }
-            </div>
-          </div>
+          <app-incidents-trend-chart
+            [trendLinePoints]="trendLinePoints()"
+            [trendDots]="trendDots()"
+            [weekDays]="weekDays">
+          </app-incidents-trend-chart>
 
-          <div class="table-card chart-card">
-            <h5 class="card-title">Risk Level Distribution</h5>
-            <div class="donut-row">
-              <div class="donut" [style.background]="donutGradient()">
-                <div class="donut-hole"></div>
-              </div>
-              <div class="donut-legend">
-                <div class="legend-item">
-                  <span class="dot dot-high"></span>
-                  High Risk
-                  <strong>{{ riskDistribution().high.pct }}% ({{ riskDistribution().high.count }})</strong>
-                </div>
-                <div class="legend-item">
-                  <span class="dot dot-medium"></span>
-                  Medium Risk
-                  <strong>{{ riskDistribution().medium.pct }}% ({{ riskDistribution().medium.count }})</strong>
-                </div>
-                <div class="legend-item">
-                  <span class="dot dot-low"></span>
-                  Low Risk
-                  <strong>{{ riskDistribution().low.pct }}% ({{ riskDistribution().low.count }})</strong>
-                </div>
-              </div>
-            </div>
-          </div>
+          <app-risk-distribution-chart
+            [distribution]="riskDistribution()"
+            [gradient]="donutGradient()">
+          </app-risk-distribution-chart>
         </div>
 
-        <!-- Recent Incidents / Reports -->
         <div class="lists-row">
-          <div class="table-card list-card">
-            <div class="list-card-header">
-              <h5 class="card-title">Recent Incidents</h5>
-              <a routerLink="/incidents" class="view-all">View All →</a>
-            </div>
-            <ul class="scroll-list">
-              @for (incident of recentIncidents(); track incident.analysisId) {
-                <li class="list-row">
-                  <div class="row-left">
-                    <span class="avatar-circle">{{ incident.studentName.slice(0, 2).toUpperCase() }}</span>
-                    <div>
-                      <p class="row-title">{{ incident.studentName }}</p>
-                      <span class="row-sub">{{ incident.behavior }}</span>
-                    </div>
-                  </div>
-                  <span class="badge" [ngClass]="riskBadgeClass(incident.behaviorConfidence > 0.7 ? 'High' : 'Medium')">
-                    {{ (incident.behaviorConfidence * 100).toFixed(0) }}%
-                  </span>
-                </li>
-              } @empty {
-                <p class="empty-text">No incidents yet.</p>
-              }
-            </ul>
-          </div>
-
-          <div class="table-card list-card">
-            <div class="list-card-header">
-              <h5 class="card-title">Recent Reports</h5>
-              <a routerLink="/reports" class="view-all">View All →</a>
-            </div>
-            <ul class="scroll-list">
-              @for (report of recentReports(); track report.id) {
-                <li class="list-row">
-                  <div class="row-left">
-                    <span class="avatar-circle">{{ report.studentName.slice(0, 2).toUpperCase() }}</span>
-                    <div>
-                      <p class="row-title">{{ report.studentName }}</p>
-                      <span class="row-sub">Week {{ report.weekNumber }}</span>
-                    </div>
-                  </div>
-                  <div class="row-right">
-                    <span class="badge" [ngClass]="riskBadgeClass(report.riskLevel)">{{ report.riskLevel }}</span>
-                    <span class="status-text">{{ report.status }}</span>
-                  </div>
-                </li>
-              } @empty {
-                <p class="empty-text">No reports yet.</p>
-              }
-            </ul>
-          </div>
+          <app-recent-incidents-list [incidents]="recentIncidents()"></app-recent-incidents-list>
+          <app-recent-reports-list [reports]="recentReports()"></app-recent-reports-list>
         </div>
 
-        <!-- Top High-Risk / Recent Quiz Activity -->
         <div class="lists-row">
-          <div class="table-card list-card">
-            <div class="list-card-header">
-              <h5 class="card-title">Top High-Risk Students</h5>
-              <a routerLink="/users" class="view-all">View All →</a>
-            </div>
-            <ul class="scroll-list">
-              @for (student of topHighRiskStudents(); track student.studentId) {
-                <li class="list-row">
-                  <div class="row-left">
-                    <span class="avatar-circle">{{ student.studentName.slice(0, 2).toUpperCase() }}</span>
-                    <div class="risk-bar-block">
-                      <p class="row-title">{{ student.studentName }}</p>
-                      <span class="row-sub">Risk Score: {{ student.scorePct }}%</span>
-                      <div class="progress-bar-track">
-                        <div
-                          class="progress-bar-fill"
-                          [ngClass]="riskBadgeClass(student.level) + '-fill'"
-                          [style.width.%]="student.scorePct">
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <span class="badge" [ngClass]="riskBadgeClass(student.level)">{{ student.level }}</span>
-                </li>
-              } @empty {
-                <p class="empty-text">No quiz data yet.</p>
-              }
-            </ul>
-          </div>
-
-          <div class="table-card list-card">
-            <div class="list-card-header">
-              <h5 class="card-title">Quizzes</h5>
-              <a routerLink="/quizzes" class="view-all">View Quizzes →</a>
-            </div>
-            <ul class="scroll-list">
-              @for (quiz of recentQuizzes(); track quiz.id) {
-                <li class="list-row">
-                  <div class="row-left">
-                    <span class="avatar-circle"><i class="bi bi-clipboard-check"></i></span>
-                    <div>
-                      <p class="row-title">{{ quiz.title }}</p>
-                      <span class="row-sub">{{ quiz.description }}</span>
-                    </div>
-                  </div>
-                  <span class="text-muted">{{ quiz.questionCount }} questions</span>
-                </li>
-              } @empty {
-                <p class="empty-text">No quizzes created yet.</p>
-              }
-            </ul>
-          </div>
+          <app-top-high-risk-students [students]="topHighRiskStudents()"></app-top-high-risk-students>
+          <app-quizzes-preview-list [quizzes]="recentQuizzes()"></app-quizzes-preview-list>
         </div>
-
       </div>
 
-      <!-- SIDEBAR -->
       <div class="sidebar-column">
+        <app-ai-school-health-card
+          [overallHealth]="overallHealth()"
+          [healthLabel]="healthLabel()"
+          [averageEmotion]="averageEmotion()"
+          [mostDetectedBehavior]="mostDetectedBehavior()"
+          [studentsNeedingAttention]="studentsNeedingAttention()">
+        </app-ai-school-health-card>
 
-        <div class="table-card health-card">
-          <h5 class="card-title">AI School Health</h5>
-          <div class="health-ring-wrap">
-            <div class="health-ring" [style.background]="'conic-gradient(#22c55e ' + overallHealth() + '%, #e5e7eb ' + overallHealth() + '%)'">
-              <div class="health-ring-inner">{{ overallHealth() }}%</div>
-            </div>
-            <div>
-              <p class="health-label">Overall School Health</p>
-              <p class="health-status">{{ healthLabel() }}</p>
-            </div>
-          </div>
-
-          <div class="health-stats">
-            <div class="health-stat-row">
-              <span><i class="bi bi-emoji-smile"></i> Average Emotion</span>
-              <strong>{{ averageEmotion() }}</strong>
-            </div>
-            <div class="health-stat-row">
-              <span><i class="bi bi-pencil"></i> Most Detected Behavior</span>
-              <strong>{{ mostDetectedBehavior() }}</strong>
-            </div>
-            <div class="health-stat-row">
-              <span><i class="bi bi-people"></i> Students Needing Attention</span>
-              <strong>{{ studentsNeedingAttention() }}</strong>
-            </div>
-          </div>
-        </div>
-
-        <div class="table-card quick-actions-card">
-          <h5 class="card-title">Quick Actions</h5>
-          <div class="quick-actions-grid">
-            <a routerLink="/quizzes" class="quick-action-btn action-purple">
-              <i class="bi bi-plus-circle"></i> Create Quiz
-            </a>
-            <a routerLink="/register" class="quick-action-btn action-green">
-              <i class="bi bi-person-plus"></i> Register User
-            </a>
-            <a routerLink="/reports" class="quick-action-btn action-blue">
-              <i class="bi bi-file-text"></i> Generate Report
-            </a>
-            <a routerLink="/incidents" class="quick-action-btn action-red">
-              <i class="bi bi-shield-exclamation"></i> View Incidents
-            </a>
-          </div>
-        </div>
+        <app-quick-actions></app-quick-actions>
       </div>
 
     </div>

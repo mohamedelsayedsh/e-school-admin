@@ -1,0 +1,12 @@
+<div class="table-card stat-card">
+      <div class="stat-icon" [ngClass]="'icon-' + color()">
+        <i class="bi" [ngClass]="icon()"></i>
+      </div>
+      <div>
+        <span class="stat-label">{{ label() }}</span>
+        <span class="stat-value">{{ value() }}</span>
+        @if (subLabel()) {
+          <span class="stat-sub" [ngClass]="subClass()">{{ subLabel() }}</span>
+        }
+      </div>
+</div>

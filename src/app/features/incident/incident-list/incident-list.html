@@ -9,10 +9,10 @@
         <input type="text" placeholder="Search by student name or ID...">
       </div>
 
-      @if (isLoading) {
+      @if (isLoading()) {
         <app-spinner message="Loading incidents data..."></app-spinner>
-      } @else if (errorMessage) {
-        <p class="text-center error-msg py-5">{{ errorMessage }}</p>
+      } @else if (errorMessage()) {
+        <p class="text-center error-msg py-5">{{ errorMessage() }}</p>
       } @else {
         <table class="custom-table">
           <thead>
@@ -26,10 +26,10 @@
             </tr>
           </thead>
           <tbody>
-            @if (incidents.length === 0) {
+            @if (incidents().length === 0) {
               <tr><td colspan="6" class="text-center py-5">No incidents recorded yet.</td></tr>
             } @else {
-              @for (incident of incidents; track incident.analysisId) {
+              @for (incident of incidents(); track incident.analysisId) {
                 <tr>
                   <td class="fw-bold text-muted">#{{ incident.analysisId }}</td>
                   <td>
@@ -66,9 +66,9 @@
       }
     </app-table-card>
 
-    @if (isImageModalOpen) {
+    @if (isImageModalOpen()) {
       <app-incident-image
-        [imageUrl]="selectedImageUrl"
+        [imageUrl]="selectedImageUrl()"
         (closeModal)="closeImageModal()">
       </app-incident-image>
     }
