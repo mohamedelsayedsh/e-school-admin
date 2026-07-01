@@ -1,6 +1,6 @@
 import { Component, input, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Router } from '@angular/router'; // 👈 استدعاء الراوتر
+import { Router } from '@angular/router';
 import { User } from '../../../core/models/user';
 
 @Component({
@@ -10,13 +10,12 @@ import { User } from '../../../core/models/user';
   styleUrl: './profile-overview.css',
 })
 export class ProfileOverview {
-  private router = inject(Router); // 👈 تعريف الراوتر
+  private router = inject(Router);
 
   user = input<User | null>(null);
   relatedUser = input<User | null>(null);
   relationLabel = input<string>('');
 
-  // 🚀 دالة النقل للبروفايل المرتبط (الأب أو الابن)
   goToRelatedUser() {
     const relatedId = this.relatedUser()?.id;
     if (relatedId) {

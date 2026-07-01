@@ -1,8 +1,9 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { IncidentService } from '../../../core/services/incident';
 import { UserService } from '../../../core/services/user';
 import { Incident } from '../../../core/models/incident';
 import { CommonModule, DatePipe } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Navbar } from '../../../shared/navbar/navbar';
 import { TableCard } from '../../../shared/table-card/table-card';
 import { IncidentImage } from "../incident-image/incident-image";
@@ -10,7 +11,7 @@ import { Spinner } from '../../../shared/spinner/spinner';
 
 @Component({
   selector: 'app-incident-list',
-  imports: [CommonModule, Navbar, TableCard, DatePipe, IncidentImage, Spinner],
+  imports: [CommonModule, FormsModule, Navbar, TableCard, DatePipe, IncidentImage, Spinner],
   templateUrl: './incident-list.html',
   styleUrl: './incident-list.css',
 })
@@ -23,8 +24,21 @@ export class IncidentList implements OnInit {
   isLoading = signal(true);
   errorMessage = signal('');
 
+  searchTerm = signal('');
+
   isImageModalOpen = signal(false);
   selectedImageUrl = signal('');
+
+  filteredIncidents = computed(() => {
+    const term = this.searchTerm().trim().toLowerCase();
+    if (!term) return this.incidents();
+
+    return this.incidents().filter((incident) => {
+      const name = this.getStudentName(incident.studentId).toLowerCase();
+      const id = incident.studentId.toString();
+      return name.includes(term) || id.includes(term);
+    });
+  });
 
   ngOnInit() {
     this.fetchData();
@@ -33,7 +47,6 @@ export class IncidentList implements OnInit {
   fetchData() {
     this.userService.getAllUsers().subscribe({
       next: (res: any) => {
-        console.log(res);
         if (res.isSuccess && res.result) {
           res.result.forEach((user: any) => {
             this.userMap.set(user.id, user.userName);
@@ -48,19 +61,21 @@ export class IncidentList implements OnInit {
     });
   }
 
- fetchIncidents() {
+  fetchIncidents() {
     this.incidentService.getAllIncidents().subscribe({
       next: (res: any) => {
-        // Add this log so you can see exactly what the Incident API returns
-        console.log('Incident API Response:', res);
+        if (res.isSuccess === false) {
+          this.errorMessage.set(res.errorMessages?.join(', ') || 'Failed to load incidents.');
+          this.incidents.set([]);
+          this.isLoading.set(false);
+          return;
+        }
 
-        // Make the parsing more flexible, exactly like we did in the Dashboard
         const incidentsData = res.result || res.data || (Array.isArray(res) ? res : []);
 
         if (incidentsData && incidentsData.length > 0) {
           this.incidents.set(incidentsData);
         } else {
-          // If the array is genuinely empty, this will display the "No incidents" message
           this.incidents.set([]);
         }
 
@@ -72,6 +87,10 @@ export class IncidentList implements OnInit {
         this.isLoading.set(false);
       }
     });
+  }
+
+  onSearchChange(value: string) {
+    this.searchTerm.set(value);
   }
 
   getStudentName(studentId: number): string {
@@ -86,26 +105,6 @@ export class IncidentList implements OnInit {
   closeImageModal() {
     this.isImageModalOpen.set(false);
     this.selectedImageUrl.set('');
-  }
-
-  getEmotionClass(emotion: string): string {
-    const dangerEmotions = ['Sad', 'Angry', 'Fear'];
-    const successEmotions = ['Happy'];
-
-    if (dangerEmotions.includes(emotion)) return 'risk-high';
-    if (successEmotions.includes(emotion)) return 'status-approved';
-    return 'status-pending';
-  }
-
-  getBehaviorClass(behavior: string): string {
-    const highRisk = ['Sleeping'];
-    const mediumRisk = ['Looking Back', 'Standing'];
-    const lowRisk = ['Writing', 'Reading', 'Looking Forward'];
-
-    if (highRisk.includes(behavior)) return 'risk-high';
-    if (mediumRisk.includes(behavior)) return 'risk-medium';
-    if (lowRisk.includes(behavior)) return 'risk-low';
-    return 'status-pending';
   }
 
   getFallbackImage(studentId: number): string {

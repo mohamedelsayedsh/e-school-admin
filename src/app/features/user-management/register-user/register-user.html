@@ -39,7 +39,7 @@
                 <input type="text" class="form-control" formControlName="userName" placeholder="e.g. john_doe"
                   [class.input-error]="f['userName'].invalid && f['userName'].touched" />
                 @if (f['userName'].invalid && f['userName'].touched) {
-                  <small class="error-text">Username is required (min 3 characters).</small>
+                  <small class="error-text"><i class="bi bi-exclamation-circle-fill"></i> Username is required (min 3 characters).</small>
                 }
               </div>
 
@@ -48,7 +48,7 @@
                 <input type="email" class="form-control" formControlName="email" placeholder="e.g. john@school.com"
                   [class.input-error]="f['email'].invalid && f['email'].touched" />
                 @if (f['email'].invalid && f['email'].touched) {
-                  <small class="error-text">A valid email is required.</small>
+                  <small class="error-text"><i class="bi bi-exclamation-circle-fill"></i> A valid email is required.</small>
                 }
               </div>
             </div>
@@ -60,15 +60,15 @@
                   <input [type]="showPassword() ? 'text' : 'password'" class="form-control" formControlName="password"
                     placeholder="e.g. Admin@123" [class.input-error]="f['password'].invalid && f['password'].touched" />
                   <i class="bi password-toggle" [class.bi-eye]="!showPassword()" [class.bi-eye-slash]="showPassword()"
-                    (click)="showPassword.set(!showPassword)"></i>
+                    (click)="showPassword.set(!showPassword())"></i>
                 </div>
 
                 @if (f['password'].touched && f['password'].invalid) {
                   @if (f['password'].errors?.['required']) {
-                    <small class="error-text">Password is required.</small>
+                    <small class="error-text"><i class="bi bi-exclamation-circle-fill"></i> Password is required.</small>
                   }
                   @else if (f['password'].errors?.['pattern'] || f['password'].errors?.['minlength']) {
-                    <small class="error-text">Must be at least 8 chars, include uppercase, lowercase, number, and special character.</small>
+                    <small class="error-text"><i class="bi bi-exclamation-circle-fill"></i> Must be at least 8 chars, include uppercase, lowercase, number, and special character.</small>
                   }
                 }
               </div>
@@ -80,10 +80,10 @@
 
                 @if (f['phoneNumber'].touched && f['phoneNumber'].invalid) {
                   @if (f['phoneNumber'].errors?.['required']) {
-                    <small class="error-text">Phone number is required.</small>
+                    <small class="error-text"><i class="bi bi-exclamation-circle-fill"></i> Phone number is required.</small>
                   }
                   @else if (f['phoneNumber'].errors?.['pattern']) {
-                    <small class="error-text">Please enter a valid Egyptian phone number (e.g. 01012345678).</small>
+                    <small class="error-text"><i class="bi bi-exclamation-circle-fill"></i> Please enter a valid Egyptian phone number (e.g. 01012345678).</small>
                   }
                 }
               </div>
@@ -106,7 +106,7 @@
               }
             </div>
             @if (f['roleID'].invalid && f['roleID'].touched) {
-              <small class="error-text">Please select a role.</small>
+              <small class="error-text"><i class="bi bi-exclamation-circle-fill"></i> Please select a role.</small>
             }
           </div>
 

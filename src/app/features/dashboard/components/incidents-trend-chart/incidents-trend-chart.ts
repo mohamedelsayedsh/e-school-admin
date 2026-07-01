@@ -9,6 +9,8 @@ import { Component, input } from '@angular/core';
 })
 export class IncidentsTrendChart {
   trendLinePoints = input.required<string>();
-  trendDots = input.required<{x: number, y: number, value: number}[]>();
+  trendDots = input.required<{ x: number; y: number; value: number }[]>();
   weekDays = input.required<string[]>();
+  trendAreaPoints = input.required<string>();
+  yAxisLabels = input.required<number[]>();
 }

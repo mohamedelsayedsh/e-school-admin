@@ -1,57 +1,69 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideRouter, Router } from '@angular/router';
-import { describe, it, expect, beforeEach } from 'vitest';
+import { Location } from '@angular/common';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 
 import { BackButton } from './back-button';
 
 describe('BackButton', () => {
   let component: BackButton;
   let fixture: ComponentFixture<BackButton>;
+  let locationSpy: { back: ReturnType<typeof vi.fn> };
 
-  function setup(routePath: string, label?: string) {
+  function setup(label?: string) {
     fixture = TestBed.createComponent(BackButton);
-    fixture.componentRef.setInput('routePath', routePath);
     if (label !== undefined) fixture.componentRef.setInput('label', label);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }
 
   beforeEach(async () => {
+    locationSpy = { back: vi.fn() };
+
     await TestBed.configureTestingModule({
       imports: [BackButton],
-      providers: [provideRouter([])],
+      providers: [
+        { provide: Location, useValue: locationSpy },
+      ],
     }).compileComponents();
   });
 
-  it('should create when routePath is provided', () => {
-    setup('/reports');
+  it('should create', () => {
+    setup();
     expect(component).toBeTruthy();
   });
 
   it('should default label to "Back" when not provided', () => {
-    setup('/reports');
+    setup();
     expect(component.label()).toBe('Back');
   });
 
   it('should use a custom label when provided', () => {
-    setup('/reports', 'Back to Reports');
+    setup('Back to Reports');
     expect(component.label()).toBe('Back to Reports');
   });
 
   it('should render the label text in the button', () => {
-    setup('/users', 'Back to Users');
+    setup('Back to Users');
     const compiled: HTMLElement = fixture.nativeElement;
     expect(compiled.querySelector('button')?.textContent).toContain('Back to Users');
   });
 
-  it('should expose the routePath value the routerLink directive consumes', () => {
-    setup('/quizzes');
-    expect(component.routePath()).toBe('/quizzes');
-  });
-
   it('should render as a type="button" element so it never submits a parent form', () => {
-    setup('/reports');
+    setup();
     const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
     expect(button.type).toBe('button');
+  });
+
+  it('goBack should call Location.back()', () => {
+    setup();
+    component.goBack();
+    expect(locationSpy.back).toHaveBeenCalled();
+  });
+
+  it('clicking the button should call goBack (Location.back)', () => {
+    setup();
+    const button: HTMLButtonElement = fixture.nativeElement.querySelector('button');
+    button.click();
+    expect(locationSpy.back).toHaveBeenCalled();
   });
 });

@@ -9,6 +9,7 @@ import { RegisterUser } from './features/user-management/register-user/register-
 import { IncidentList } from './features/incident/incident-list/incident-list';
 import { Dashboard } from './features/dashboard/dashboard';
 import { authGuard } from './core/guards/auth-guard';
+import { AiScanner } from './features/ai-scanner/ai-scanner';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'login', pathMatch: 'full' },
@@ -17,8 +18,9 @@ export const routes: Routes = [
   { path: 'users', component: UserManagement, canActivate: [authGuard] },
   { path: 'register', component: RegisterUser, canActivate: [authGuard] },
   { path: 'users/:id', component: Profile, canActivate: [authGuard] },
+  { path: 'quizzes', component: QuizzesList, canActivate: [authGuard] },
+  { path: 'ai-scanner', component: AiScanner, canActivate: [authGuard] },
   { path: 'incidents', component: IncidentList, canActivate: [authGuard] },
   { path: 'reports', component: ReportsList, canActivate: [authGuard] },
   { path: 'reports/:id', component: ReportDetail, canActivate: [authGuard] },
-  { path: 'quizzes', component: QuizzesList, canActivate: [authGuard] },
 ];

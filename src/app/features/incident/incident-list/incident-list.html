@@ -6,7 +6,11 @@
 
       <div table-actions class="search-box">
         <i class="bi bi-search"></i>
-        <input type="text" placeholder="Search by student name or ID...">
+        <input
+          type="text"
+          placeholder="Search by student name"
+          [ngModel]="searchTerm()"
+          (ngModelChange)="onSearchChange($event)">
       </div>
 
       @if (isLoading()) {
@@ -26,27 +30,31 @@
             </tr>
           </thead>
           <tbody>
-            @if (incidents().length === 0) {
-              <tr><td colspan="6" class="text-center py-5">No incidents recorded yet.</td></tr>
+            @if (filteredIncidents().length === 0) {
+              <tr>
+                <td colspan="6" class="text-center py-5">
+                  {{ searchTerm() ? 'No incidents match your search.' : 'No incidents recorded yet.' }}
+                </td>
+              </tr>
             } @else {
-              @for (incident of incidents(); track incident.analysisId) {
+              @for (incident of filteredIncidents(); track incident.analysisId) {
                 <tr>
                   <td class="fw-bold text-muted">#{{ incident.analysisId }}</td>
                   <td>
                     <div class="user-name-col">
-                      <img [src]="getFallbackImage(incident.studentId)+'&background=2563eb&color=fff&bold=true&size=64'" alt="Student Avatar"  class="avatar">
+                      <img [src]="getFallbackImage(incident.studentId)+'&background=2563eb&color=fff&bold=true&size=64'" alt="Student Avatar" class="avatar">
                       <div class="user-info">
                         <span class="fw-bold">{{ getStudentName(incident.studentId) }}</span>
                       </div>
                     </div>
                   </td>
                   <td>
-                    <span class="risk-badge" [ngClass]="getEmotionClass(incident.emotion)">
+                    <span class="badge-blue">
                       {{ incident.emotion }} ({{ (incident.emotionConfidence * 100).toFixed(0) }}%)
                     </span>
                   </td>
                   <td>
-                    <span class="risk-badge" [ngClass]="getBehaviorClass(incident.behavior)">
+                    <span class="badge-blue">
                       {{ incident.behavior }} ({{ (incident.behaviorConfidence * 100).toFixed(0) }}%)
                     </span>
                   </td>
@@ -55,7 +63,7 @@
                   </td>
                   <td>
                     <div class="action-icons">
-                      <i class="bi bi-eye neutral" (click)="openImageModal(incident.imageUrl)" title="View Image"></i>
+                      <i class="bi bi-eye" (click)="openImageModal(incident.imageUrl)" title="View Image"></i>
                     </div>
                   </td>
                 </tr>

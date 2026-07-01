@@ -9,6 +9,6 @@ import { Sidebar } from "./shared/sidebar/sidebar";
   styleUrl: './app.css'
 })
 export class App {
-  protected readonly title = signal('e-school-admin');
+  readonly title = signal('Bright Path');
   public router = inject(Router);
 }

@@ -58,8 +58,6 @@ export class RegisterUser implements OnInit {
 
       roleID:      [null, [Validators.required]],
     });
-
-    // Simulate page load waiting time (2 seconds)
     setTimeout(() => {
       this.isLoading.set(false);
     }, 500);

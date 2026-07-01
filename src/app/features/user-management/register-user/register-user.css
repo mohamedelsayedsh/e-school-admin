@@ -104,6 +104,39 @@
   background: #fff8f8 !important;
 }
 
+/* ---- Validation error pills (matches login page style) ---- */
+.error-text {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  width: fit-content;
+  background: var(--danger-light);
+  color: #842029;
+  font-size: 12.5px;
+  font-weight: 600;
+  padding: 5px 10px 5px 8px;
+  border-radius: 999px;
+  line-height: 1.3;
+  margin-top: 2px;
+  animation: slideDownFade 0.2s ease-out;
+}
+
+.error-text i {
+  font-size: 13px;
+  flex-shrink: 0;
+}
+
+@keyframes slideDownFade {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ---- Role selector ---- */
 .role-selector {
   display: grid;

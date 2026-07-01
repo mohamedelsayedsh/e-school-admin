@@ -1,17 +1,30 @@
-<div class="page-header">
-  <h1>{{ pageTitle() }}</h1>
+<div class="page-header" [class.dashboard-mode]="isDashboard()">
+
+  @if (isDashboard()) {
+    <div class="header-titles">
+      <h1>Welcome back, {{ userName() }} <span class="wave">👋</span></h1>
+      <p class="subtitle">Here's what's happening in Bright Path today.</p>
+    </div>
+  } @else {
+    <h1>{{ pageTitle() }}</h1>
+  }
 
   <div class="top-icons">
 
-    <div class="icon-circle" title="Notifications">
-      <i class="bi bi-bell"></i>
-    </div>
+    @if (isDashboard()) {
+      <div class="header-date">
+        <i class="bi bi-calendar3"></i>
+        <span>{{ currentDate | date:'EEEE, MMMM d, y' }}</span>
+      </div>
+
+    }
 
     <img
-      src="https://ui-avatars.com/api/?name={{ userName() }}&background=random"
-      class="profile-pic"
+      src="https://ui-avatars.com/api/?name={{ userName() }}&background=2563eb&color=fff"
+      class="profile-pic cursor-pointer"
       alt="{{ userName() }}"
-      title="{{ userName() }}"
+      title="Go to Dashboard"
+      (click)="goToDashboard()"
     />
 
     <div

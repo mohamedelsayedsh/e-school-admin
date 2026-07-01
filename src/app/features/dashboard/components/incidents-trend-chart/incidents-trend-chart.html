@@ -1,14 +1,51 @@
 <div class="table-card chart-card">
-      <h5 class="card-title">Incidents Trend (This Week)</h5>
-      <svg viewBox="0 0 600 160" class="trend-svg">
+
+  <div class="chart-header">
+    <h5 class="card-title m-0">Incidents Trend <span class="text-muted fw-normal">(This Week)</span></h5>
+  </div>
+
+  <div class="chart-body mt-4">
+
+    <div class="y-axis">
+      @for (label of yAxisLabels(); track $index) {
+        <span>{{ label }}</span>
+      }
+    </div>
+
+    <div class="chart-graphics">
+      <svg viewBox="0 0 600 160" preserveAspectRatio="none" class="trend-svg">
+
+        <defs>
+          <linearGradient id="areaGradient" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#2563eb" stop-opacity="0.25"></stop>
+            <stop offset="100%" stop-color="#2563eb" stop-opacity="0.0"></stop>
+          </linearGradient>
+        </defs>
+
+        <g class="grid-lines">
+          <line x1="0" y1="10" x2="600" y2="10" />
+          <line x1="0" y1="40" x2="600" y2="40" />
+          <line x1="0" y1="70" x2="600" y2="70" />
+          <line x1="0" y1="100" x2="600" y2="100" />
+          <line x1="0" y1="130" x2="600" y2="130" />
+          <line x1="0" y1="160" x2="600" y2="160" />
+        </g>
+
+        <polygon [attr.points]="trendAreaPoints()" class="trend-area" fill="url(#areaGradient)" />
+
         <polyline [attr.points]="trendLinePoints()" class="trend-line" />
+
         @for (dot of trendDots(); track $index) {
-          <circle [attr.cx]="dot.x" [attr.cy]="dot.y" r="4" class="trend-dot" />
+          <circle [attr.cx]="dot.x" [attr.cy]="dot.y" r="5" class="trend-dot" />
         }
       </svg>
+
       <div class="trend-labels">
         @for (day of weekDays(); track day) {
           <span>{{ day }}</span>
         }
       </div>
     </div>
+
+  </div>
+</div>

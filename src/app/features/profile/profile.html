@@ -2,6 +2,8 @@
 
   <app-navbar [pageTitle]="profileTitle()"></app-navbar>
 
+  <app-back-button class="mt-3"></app-back-button>
+
   @if (isLoading()) {
     <app-spinner message="Loading Profile...."></app-spinner>
   }

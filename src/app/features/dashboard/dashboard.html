@@ -36,8 +36,10 @@
         <div class="charts-row">
           <app-incidents-trend-chart
             [trendLinePoints]="trendLinePoints()"
+            [trendAreaPoints]="trendAreaPoints()"
             [trendDots]="trendDots()"
-            [weekDays]="weekDays">
+            [weekDays]="weekDays"
+            [yAxisLabels]="yAxisLabels()">
           </app-incidents-trend-chart>
 
           <app-risk-distribution-chart

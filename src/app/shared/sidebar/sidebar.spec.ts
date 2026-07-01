@@ -23,8 +23,8 @@ describe('Sidebar', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should expose exactly 6 nav items', () => {
-    expect(component.navItems.length).toBe(6);
+  it('should expose exactly 7 nav items', () => {
+  expect(component.navItems.length).toBe(7);
   });
 
   it('should include the expected routes in the expected order', () => {
@@ -33,6 +33,7 @@ describe('Sidebar', () => {
       '/users',
       '/register',
       '/quizzes',
+      '/ai-scanner',
       '/incidents',
       '/reports',
     ]);
@@ -62,6 +63,6 @@ describe('Sidebar', () => {
 
   it('should render the company name in the header', () => {
     const compiled: HTMLElement = fixture.nativeElement;
-    expect(compiled.querySelector('.logo-text')?.textContent).toContain('E SCHOOL');
+    expect(compiled.querySelector('.logo-text')?.textContent).toContain('BRIGHT PATH');
   });
 });

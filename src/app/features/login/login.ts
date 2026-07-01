@@ -15,6 +15,7 @@ export class Login {
 
   errorMessage = signal('');
   isLoading = signal(false);
+  showPassword = signal(false);
 
   loginForm = new FormGroup({
     userName: new FormControl('', [Validators.required, Validators.minLength(3)]),
@@ -40,7 +41,7 @@ export class Login {
     this.authService.login(credentials).subscribe({
       next: (response) => {
         if (response.isSuccess) {
-          this.router.navigate(['/users']);
+          this.router.navigate(['/dashboard']);
         } else {
           this.errorMessage.set(response.errorMessages?.join(', ') || 'Invalid username or password');
           this.isLoading.set(false);

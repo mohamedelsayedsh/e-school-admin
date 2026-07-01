@@ -104,7 +104,7 @@ describe('Login', () => {
     component.loginForm.setValue({ userName: 'admin', password: 'password123' });
     component.onLogin();
 
-    expect(routerSpy.navigate).toHaveBeenCalledWith(['/users']);
+    expect(routerSpy.navigate).toHaveBeenCalledWith(['/dashboard']);
   });
 
   it('should show the backend error message when isSuccess is false', () => {

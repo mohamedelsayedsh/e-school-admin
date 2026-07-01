@@ -121,19 +121,6 @@ describe('IncidentList', () => {
     expect(component.selectedImageUrl()).toBe('');
   });
 
-  it('getEmotionClass should classify danger/success/neutral emotions correctly', () => {
-    expect(component.getEmotionClass('Sad')).toBe('risk-high');
-    expect(component.getEmotionClass('Happy')).toBe('status-approved');
-    expect(component.getEmotionClass('Neutral')).toBe('status-pending');
-  });
-
-  it('getBehaviorClass should classify high/medium/low risk behaviors correctly', () => {
-    expect(component.getBehaviorClass('Sleeping')).toBe('risk-high');
-    expect(component.getBehaviorClass('Standing')).toBe('risk-medium');
-    expect(component.getBehaviorClass('Reading')).toBe('risk-low');
-    expect(component.getBehaviorClass('Unknown')).toBe('status-pending');
-  });
-
   it('getFallbackImage should build a ui-avatars url using the student name', () => {
     const url = component.getFallbackImage(10);
     expect(url).toBe('https://ui-avatars.com/api/?name=Ahmed&background=e8ebf0&color=aaa');

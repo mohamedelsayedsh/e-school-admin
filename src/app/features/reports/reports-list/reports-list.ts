@@ -23,7 +23,25 @@ export class ReportsList implements OnInit {
 
   reports = signal<ReportInterface[]>([]);
   filteredReports = signal<ReportInterface[]>([]);
-  studentNames: Map<number, string> = new Map();
+  studentNames = signal<Map<number, string>>(new Map());
+
+    private loadStudentNames() {
+      const sub = this.userService.getAllUsers().subscribe({
+        next: (res) => {
+          if (res.isSuccess && res.result) {
+            const map = new Map<number, string>();
+            res.result.forEach(user => map.set(Number(user.id), user.userName));
+            this.studentNames.set(map);
+          }
+        },
+        error: () => {}
+      });
+      this.destroyRef.onDestroy(() => sub.unsubscribe());
+    }
+
+    getStudentName(studentId: number): string {
+      return this.studentNames().get(Number(studentId)) ?? `Student #${studentId}`;
+    }
 
   isLoading = signal(true);
   errorMessage = signal('');
@@ -61,23 +79,6 @@ export class ReportsList implements OnInit {
     this.destroyRef.onDestroy(() => sub.unsubscribe());
   }
 
-  private loadStudentNames() {
-    const sub = this.userService.getAllUsers().subscribe({
-      next: (res) => {
-        if (res.isSuccess && res.result) {
-          res.result.forEach(user => this.studentNames.set(user.id, user.userName));
-        }
-      },
-      error: () => {
-        // Name lookup failure is non-critical — reports still render with fallback names
-      }
-    });
-    this.destroyRef.onDestroy(() => sub.unsubscribe());
-  }
-
-  getStudentName(studentId: number): string {
-    return this.studentNames.get(studentId) ?? `Student #${studentId}`;
-  }
 
   applyFilters() {
     let result = this.reports();

@@ -77,9 +77,8 @@ describe('Profile', () => {
     expect(component.isParent()).toBe(false);
     expect(component.isLoading()).toBe(false);
     expect(parentStudentServiceSpy.getLinkedParentsStudents).not.toHaveBeenCalled();
-    expect(component.profileTitle()).toBe('AdminUser — Admin');
+    expect(component.profileTitle()).toBe('Profile Overview');
   });
-
   it('should set the error message and stop loading when the user fetch reports failure', async () => {
     userServiceSpy.getUserById.mockReturnValue(
       of({ isSuccess: false, statusCode: 404, errorMessages: ['User not found'], result: null })

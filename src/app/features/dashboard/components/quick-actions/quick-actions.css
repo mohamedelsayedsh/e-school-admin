@@ -1,13 +1,22 @@
 .quick-actions-card { padding: 20px; background: #fff; border-radius: 12px; }
-    .card-title { font-size: 1rem; font-weight: 600; margin: 0 0 16px 0; }
-    .quick-actions-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-    .quick-action-btn {
-      display: flex; align-items: center; gap: 8px;
-      padding: 12px; border-radius: 10px;
-      font-size: 0.85rem; font-weight: 600;
-      text-decoration: none; cursor: pointer;
-    }
-    .action-purple { background: #ede9fe; color: #7c3aed; }
-    .action-green { background: #dcfce7; color: #16a34a; }
-    .action-blue { background: #dbeafe; color: #2563eb; }
-    .action-red { background: #fee2e2; color: #dc2626; }
+.card-title { font-size: 1rem; font-weight: 600; margin: 0 0 16px 0; }
+.quick-actions-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+
+@media (max-width: 500px) {
+  .quick-actions-grid { grid-template-columns: 1fr 1fr; }
+}
+
+.quick-action-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 12px; border-radius: 10px;
+  font-size: 0.85rem; font-weight: 600;
+  text-decoration: none; cursor: pointer;
+  transition: filter 0.15s;
+}
+.quick-action-btn:hover { filter: brightness(0.95); }
+
+.action-purple { background: #ede9fe; color: #7c3aed; }
+.action-green  { background: #dcfce7; color: #16a34a; }
+.action-blue   { background: #dbeafe; color: #2563eb; }
+.action-red    { background: #fee2e2; color: #dc2626; }
+.action-orange { background: #ffedd5; color: #ea580c; }

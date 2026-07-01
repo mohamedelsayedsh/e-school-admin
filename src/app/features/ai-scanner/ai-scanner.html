@@ -1,0 +1,171 @@
+<div class="page-container">
+  <app-navbar pageTitle="AI Scanner Workspace"></app-navbar>
+
+  <div class="tabs-container mt-4">
+    <button class="tab-btn" [class.active]="activeTab() === 'image'" (click)="switchTab('image')">
+      <i class="bi bi-camera"></i> Class Image Analysis
+    </button>
+    <button class="tab-btn" [class.active]="activeTab() === 'video'" (click)="switchTab('video')">
+      <i class="bi bi-camera-video"></i> Video Analysis
+    </button>
+  </div>
+
+  <div class="table-card mt-4">
+    <div class="upload-section text-center p-5 d-flex flex-column align-items-center">
+
+      @if (isLoading()) {
+        <div class="py-5">
+          <app-spinner [message]="loadingMessage()"></app-spinner>
+        </div>
+      } @else {
+
+        <div class="upload-zone mx-auto mt-2 w-100">
+          <input type="file"
+                id="fileUpload"
+                class="hidden-input"
+                [accept]="activeTab() === 'image' ? 'image/*' : 'video/mp4,video/*'"
+                (change)="onFileSelected($event)">
+
+          <label for="fileUpload" class="upload-label">
+            <i class="bi upload-icon" [ngClass]="activeTab() === 'image' ? 'bi-image' : 'bi-film'"></i>
+            <h5 class="mt-3 fw-bold text-dark">Click to upload {{ activeTab() === 'image' ? 'Image' : 'Video' }}</h5>
+            <p class="text-muted small">or drag and drop your file here</p>
+
+            @if (selectedFile()) {
+              <div class="selected-file mt-3 fade-in">
+                <i class="bi bi-file-earmark-check-fill text-success"></i>
+                <span class="ms-2 fw-bold">{{ selectedFile()?.name }}</span>
+              </div>
+            }
+          </label>
+        </div>
+
+        <button class="btn btn-primary mt-4 start-btn"
+                [disabled]="!selectedFile()"
+                (click)="analyzeMedia()">
+          <i class="bi bi-magic me-2"></i> Start Analysis
+        </button>
+
+        @if (errorMessage()) {
+          <div class="text-danger mt-3 fw-bold">{{ errorMessage() }}</div>
+        }
+      }
+
+    </div>
+  </div>
+
+  @if (imageResults().length > 0) {
+    <table class="custom-table w-100">
+      <thead>
+        <tr>
+          <th>Analysis ID</th>
+          <th>Student Info</th>
+          <th>Emotion Detected</th>
+          <th>Behavior Detected</th>
+          <th class="actions-col">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (incident of imageResults(); track incident.analysisId) {
+          <tr>
+            <td class="text-muted fw-bold">#{{ incident.analysisId }}</td>
+            <td>
+              <div class="user-name-col">
+                <img [src]="getFallbackImage(incident.studentId)+'&background=2563eb&color=fff&bold=true&size=64'" alt="Student Avatar" class="avatar">
+                <div class="user-info">
+                  <span class="fw-bold">{{ getStudentName(incident.studentId) }}</span>
+                </div>
+              </div>
+            </td>
+            <td>
+              <span class="badge-blue">
+                {{ incident.emotion }} ({{ (incident.emotionConfidence * 100).toFixed(0) }}%)
+              </span>
+            </td>
+            <td>
+              <span class="badge-blue">
+                {{ incident.behavior }} ({{ (incident.behaviorConfidence * 100).toFixed(0) }}%)
+              </span>
+            </td>
+            <td>
+              <div class="action-icons">
+                <i class="bi bi-eye" (click)="openImageModal(incident.imageUrl)" title="View Image"></i>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+
+@if (videoResult(); as result) {
+  <div class="result-card mt-4">
+
+    <!-- Hero status banner -->
+    <div class="result-hero" [class.hero-danger]="hasRiot()" [class.hero-safe]="!hasRiot()">
+      <div class="hero-icon">
+        <i class="bi" [ngClass]="hasRiot() ? 'bi-exclamation-triangle-fill' : 'bi-shield-check'"></i>
+      </div>
+      <div class="hero-text">
+        <h3 class="hero-title">{{ hasRiot() ? 'Riot Detected' : 'No Riot Detected' }}</h3>
+        <p class="hero-subtitle">{{ recommendation() }}</p>
+      </div>
+      <div class="hero-risk-pill" [style.background]="riskLevel().color">
+        {{ riskLevel().text }}
+      </div>
+    </div>
+
+    <div class="result-body">
+
+      <!-- File meta strip -->
+      <div class="meta-strip">
+        <div class="meta-item">
+          <i class="bi bi-cloud-arrow-up-fill"></i>
+          <div>
+            <span class="meta-label">Source</span>
+            <span class="meta-value">{{ result.source }}</span>
+          </div>
+        </div>
+        <div class="meta-divider"></div>
+        <div class="meta-item">
+          <i class="bi bi-film"></i>
+          <div>
+            <span class="meta-label">File Name</span>
+            <span class="meta-value text-truncate" [title]="result.filename">{{ result.filename }}</span>
+          </div>
+        </div>
+        <div class="meta-divider"></div>
+        <div class="meta-item">
+          <i class="bi" [ngClass]="result.status === 'Success' ? 'bi-check-circle-fill' : 'bi-x-circle-fill'"></i>
+          <div>
+            <span class="meta-label">Status</span>
+            <span class="meta-value">{{ result.status }}</span>
+          </div>
+        </div>
+      </div>
+
+    <!-- Confidence comparison -->
+    <div class="confidence-section">
+      <h6 class="section-label">Riot Detection Confidence</h6>
+
+      <div class="confidence-grid confidence-grid-single">
+        <div class="confidence-card confidence-riot">
+          <div class="confidence-ring" [style.--pct.%]="riotProbability() * 100">
+            <span class="confidence-ring-value">{{ riotPercentage() }}%</span>
+          </div>
+          <span class="confidence-name">Riot</span>
+        </div>
+      </div>
+    </div>
+
+        </div>
+      </div>
+}
+
+  @if (isImageModalOpen()) {
+    <app-incident-image
+      [imageUrl]="selectedImageUrl()"
+      (closeModal)="closeImageModal()">
+    </app-incident-image>
+  }
+</div>

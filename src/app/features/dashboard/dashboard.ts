@@ -156,6 +156,25 @@ export class Dashboard implements OnInit {
     }));
   });
 
+  trendAreaPoints = computed(() => {
+    const line = this.trendLinePoints();
+    return `${line} 600,160 0,160`;
+  });
+
+  yAxisLabels = computed(() => {
+    const counts = this.incidentsTrend();
+    const max = Math.max(...counts, 5);
+    const upperBound = Math.ceil(max / 5) * 5;
+    return [
+      upperBound,
+      Math.round(upperBound * 0.8),
+      Math.round(upperBound * 0.6),
+      Math.round(upperBound * 0.4),
+      Math.round(upperBound * 0.2),
+      0
+    ];
+  });
+
   // ---------- Risk distribution (donut) ----------
   riskDistribution = computed(() => {
     const reports = this.reports();

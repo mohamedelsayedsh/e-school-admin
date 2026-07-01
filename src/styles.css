@@ -446,3 +446,16 @@ body {
   text-transform:capitalize;
 
 }
+.badge-blue {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 90px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: .4px;
+  background: var(--primary-light);
+  color: var(--primary);
+}

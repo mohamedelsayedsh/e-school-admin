@@ -8,10 +8,11 @@ import { UserService } from '../../core/services/user';
 import { ParentStudentService } from '../../core/services/parent-student';
 import { User } from '../../core/models/user';
 import { Spinner } from "../../shared/spinner/spinner";
+import { BackButton } from "../../shared/back-button/back-button";
 
 @Component({
   selector: 'app-profile',
-  imports: [CommonModule, Navbar, ProfileOverview, ProfileActivity, Spinner],
+  imports: [CommonModule, Navbar, ProfileOverview, ProfileActivity, Spinner, BackButton],
   templateUrl: './profile.html',
   styleUrl: './profile.css',
 })
@@ -24,6 +25,7 @@ export class Profile implements OnInit {
   relatedUser = signal<User | null>(null);
   relationLabel = signal('');
 
+  profileTitle = signal('Profile Overview')
   isParent = signal(false);
   isStudent = signal(false);
   isAdmin = signal(false);
@@ -31,7 +33,6 @@ export class Profile implements OnInit {
   isLoading = signal(true);
   errorMessage = signal('');
 
-  profileTitle = signal('Profile');
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
@@ -63,7 +64,6 @@ export class Profile implements OnInit {
         if (response.isSuccess) {
           const user = response.result;
           this.viewedUser.set(user);
-          this.profileTitle.set(`${user.userName} — ${user.role?.roleName || 'User'}`);
 
           const roleName = user.role?.roleName?.toLowerCase();
           const isParent = roleName === 'parent';
